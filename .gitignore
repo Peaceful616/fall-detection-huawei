@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# 模型权重
+checkpoints/
+*.pt
+*.pth
+*.onnx
+*.rknn
+*.wk
+yolov8n.pt
+*.bin
+
+# 数据集（太大，不入库）
+data/omnifall/
+data/urfd/
+data/videos/
+data/calib_images.txt
+*.mp4
+*.avi
+*.mov
+
+# 输出
+demo_output.mp4
+*.log
+runs/
+wandb/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
