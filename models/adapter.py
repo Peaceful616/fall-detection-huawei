@@ -12,7 +12,7 @@ import torch.nn.functional as F
 
 
 class DepthwiseSpatioTemporalConv(nn.Module):
-    """3×3×3 depthwise 时空卷积
+    """3×3×3 depthwise 时空卷积（v3 增强：带 SE 注意力）
 
     输入: (B, C, T, H, W)
     输出: (B, C_out, T, H, W)
@@ -20,15 +20,26 @@ class DepthwiseSpatioTemporalConv(nn.Module):
     设计：
     - 空间 depthwise（每通道独立卷积）
     - 时序 pointwise（1D 卷积混合通道）
+    - SE 通道注意力（v3 新增，提升特征表达）
     - 比 3D 全卷积参数少 9× 左右
     """
 
-    def __init__(self, c_in: int, c_out: int):
+    def __init__(self, c_in: int, c_out: int, use_se: bool = True):
         super().__init__()
         self.spatial_dw = nn.Conv2d(c_in, c_in, 3, padding=1, groups=c_in)
         self.temporal_pw = nn.Conv1d(c_in, c_out, kernel_size=3, padding=1)
         self.bn = nn.BatchNorm3d(c_out)
         self.act = nn.ReLU(inplace=True)
+        # SE 通道注意力（v3 新增）
+        self.use_se = use_se
+        if use_se:
+            self.se = nn.Sequential(
+                nn.AdaptiveAvgPool3d(1),
+                nn.Conv3d(c_out, c_out // 4, 1),
+                nn.ReLU(inplace=True),
+                nn.Conv3d(c_out // 4, c_out, 1),
+                nn.Sigmoid(),
+            )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # x: (B, C, T, H, W)
@@ -45,6 +56,8 @@ class DepthwiseSpatioTemporalConv(nn.Module):
         x = x.view(B, H, W, -1, T).permute(0, 3, 4, 1, 2).contiguous()  # (B, C_out, T, H, W)
         x = self.bn(x)
         x = self.act(x)
+        if self.use_se:
+            x = x * self.se(x)
         return x
 
 
@@ -140,41 +153,46 @@ SpatioTemporalAdapter = SpatioTemporalAdapterV2
 
 
 class CNN1DClassifier(nn.Module):
-    """1D-CNN 时序分类头 v2：3 层 + 残差（NPU 友好）
+    """1D-CNN 时序分类头 v3：支持 2-4 层 + 残差（NPU 友好）
 
     输入: (B, C, T)
     输出: (B, num_classes)
     """
 
-    def __init__(self, c_in: int = 64, c_hidden: int = 128, c_out: int = 256,
-                 num_classes: int = 5, layers: int = 3,
+    def __init__(self, c_in: int = 128, c_hidden: int = 512, c_out: int = 1024,
+                 num_classes: int = 5, layers: int = 4,
                  residual: bool = True):
         super().__init__()
         self.residual = residual
+        self.layers = layers
 
+        # 4 层结构：c_in → c_hidden → c_hidden → c_hidden → c_out
         self.conv1 = nn.Conv1d(c_in, c_hidden, 3, padding=1)
         self.bn1 = nn.BatchNorm1d(c_hidden)
         self.conv2 = nn.Conv1d(c_hidden, c_hidden, 3, padding=1)
         self.bn2 = nn.BatchNorm1d(c_hidden)
-        self.conv3 = nn.Conv1d(c_hidden, c_out, 3, padding=1)
-        self.bn3 = nn.BatchNorm1d(c_out)
+        self.conv3 = nn.Conv1d(c_hidden, c_hidden, 3, padding=1) if layers >= 3 else None
+        self.bn3 = nn.BatchNorm1d(c_hidden) if layers >= 3 else None
+        self.conv4 = nn.Conv1d(c_hidden, c_out, 3, padding=1) if layers >= 4 else None
+        self.bn4 = nn.BatchNorm1d(c_out) if layers >= 4 else None
         # 残差对齐
         self.res_align = (nn.Conv1d(c_in, c_out, 1) if c_in != c_out
                          else nn.Identity())
         self.act = nn.ReLU(inplace=True)
         self.pool = nn.AdaptiveAvgPool1d(1)
         self.fc = nn.Linear(c_out, num_classes)
-        self.layers = layers
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # x: (B, C_in, T)
-        res = self.res_align(x)        # (B, C_out, T) 对齐到输出通道
+        res = self.res_align(x)        # (B, C_out, T)
         h = self.act(self.bn1(self.conv1(x)))   # (B, C_hidden, T)
         h = self.act(self.bn2(self.conv2(h)))   # (B, C_hidden, T)
-        if self.layers >= 3:
-            h = self.act(self.bn3(self.conv3(h)))  # (B, C_out, T)
+        if self.layers >= 3 and self.conv3 is not None:
+            h = self.act(self.bn3(self.conv3(h)))  # (B, C_hidden, T)
+        if self.layers >= 4 and self.conv4 is not None:
+            h = self.act(self.bn4(self.conv4(h)))   # (B, C_out, T)
             if self.residual:
-                h = h + res                  # 残差相加（同通道数）
+                h = h + res                  # 残差相加
         x = self.pool(h).squeeze(-1)  # (B, C_out)
         x = self.fc(x)
         return x
