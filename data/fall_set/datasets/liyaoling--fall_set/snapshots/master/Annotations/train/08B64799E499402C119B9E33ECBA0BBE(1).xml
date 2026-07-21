@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>train</folder>
+  <filename>08B64799E499402C119B9E33ECBA0BBE(1).jpg</filename>
+  <path>C:\Users\LiKang\Desktop\XML_Dataset\JPEGImages\train\08B64799E499402C119B9E33ECBA0BBE(1).jpg</path>
+  <source>
+    <database>Unknown</database>
+  </source>
+  <size>
+    <width>3072</width>
+    <height>4096</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>Normal</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>1464</xmin>
+      <ymin>812</ymin>
+      <xmax>2550</xmax>
+      <ymax>4096</ymax>
+    </bndbox>
+  </object>
+</annotation>

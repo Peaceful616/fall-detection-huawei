@@ -1,0 +1,4778 @@
+[
+  {
+    "image": "fall_1105.jpg",
+    "width": 474,
+    "height": 632,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.600211,
+        "cy": 0.454905,
+        "w": 0.158228,
+        "h": 0.188291
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.804852,
+        "cy": 0.502373,
+        "w": 0.259494,
+        "h": 0.204114
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1402.jpg",
+    "width": 633,
+    "height": 425,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.492101,
+        "cy": 0.770588,
+        "w": 0.225908,
+        "h": 0.312941
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_253.jpg",
+    "width": 301,
+    "height": 217,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.51495,
+        "cy": 0.352535,
+        "w": 0.212625,
+        "h": 0.419355
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.742525,
+        "cy": 0.495392,
+        "w": 0.421927,
+        "h": 0.576037
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_135.jpg",
+    "width": 1080,
+    "height": 1867,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.726852,
+        "cy": 0.614355,
+        "w": 0.42963,
+        "h": 0.084628
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1286.jpg",
+    "width": 364,
+    "height": 196,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.502747,
+        "cy": 0.533163,
+        "w": 0.813187,
+        "h": 0.780612
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_608.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.543,
+        "cy": 0.432432,
+        "w": 0.826,
+        "h": 0.678679
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_737.jpg",
+    "width": 259,
+    "height": 194,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.671815,
+        "cy": 0.811856,
+        "w": 0.432432,
+        "h": 0.314433
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_828.jpg",
+    "width": 550,
+    "height": 367,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.345455,
+        "cy": 0.73297,
+        "w": 0.687273,
+        "h": 0.26158
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_231.jpg",
+    "width": 534,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.319288,
+        "cy": 0.72,
+        "w": 0.215356,
+        "h": 0.506667
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.441011,
+        "cy": 0.298333,
+        "w": 0.181648,
+        "h": 0.196667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_549.jpg",
+    "width": 500,
+    "height": 327,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.634,
+        "cy": 0.634557,
+        "w": 0.532,
+        "h": 0.431193
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_195.jpg",
+    "width": 500,
+    "height": 500,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.391,
+        "cy": 0.667,
+        "w": 0.406,
+        "h": 0.634
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_429.jpg",
+    "width": 450,
+    "height": 250,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.535556,
+        "cy": 0.514,
+        "w": 0.631111,
+        "h": 0.844
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1001.jpg",
+    "width": 150,
+    "height": 100,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.51,
+        "cy": 0.51,
+        "w": 0.953333,
+        "h": 0.48
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_408.jpg",
+    "width": 296,
+    "height": 221,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.555743,
+        "cy": 0.723982,
+        "w": 0.192568,
+        "h": 0.271493
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1303.jpg",
+    "width": 600,
+    "height": 397,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.473333,
+        "cy": 0.491184,
+        "w": 0.866667,
+        "h": 0.483627
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_807.jpg",
+    "width": 400,
+    "height": 265,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.445,
+        "cy": 0.498113,
+        "w": 0.875,
+        "h": 0.898113
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_910.jpg",
+    "width": 500,
+    "height": 311,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.278,
+        "cy": 0.467846,
+        "w": 0.276,
+        "h": 0.575563
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1396.jpg",
+    "width": 400,
+    "height": 289,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.62125,
+        "cy": 0.544983,
+        "w": 0.4975,
+        "h": 0.480969
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_599.jpg",
+    "width": 500,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.603,
+        "cy": 0.540663,
+        "w": 0.298,
+        "h": 0.35241
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_8.jpg",
+    "width": 335,
+    "height": 250,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.737313,
+        "cy": 0.738,
+        "w": 0.262687,
+        "h": 0.18
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_459.jpg",
+    "width": 375,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.504,
+        "cy": 0.568333,
+        "w": 0.144,
+        "h": 0.436667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1306.jpg",
+    "width": 1200,
+    "height": 627,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.444167,
+        "cy": 0.662679,
+        "w": 0.611667,
+        "h": 0.591707
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_144.jpg",
+    "width": 284,
+    "height": 170,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.554577,
+        "cy": 0.682353,
+        "w": 0.257042,
+        "h": 0.376471
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_985.jpg",
+    "width": 502,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.472112,
+        "cy": 0.52,
+        "w": 0.621514,
+        "h": 0.713333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1025.jpg",
+    "width": 500,
+    "height": 375,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.395,
+        "cy": 0.861333,
+        "w": 0.222,
+        "h": 0.277333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_709.jpg",
+    "width": 500,
+    "height": 315,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.692,
+        "cy": 0.433333,
+        "w": 0.596,
+        "h": 0.860317
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1091.jpg",
+    "width": 640,
+    "height": 480,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.632031,
+        "cy": 0.801042,
+        "w": 0.310937,
+        "h": 0.38125
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1180.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.446,
+        "cy": 0.621622,
+        "w": 0.192,
+        "h": 0.09009
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_727.jpg",
+    "width": 500,
+    "height": 641,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.565,
+        "cy": 0.609204,
+        "w": 0.786,
+        "h": 0.628705
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_527.jpg",
+    "width": 400,
+    "height": 282,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.58875,
+        "cy": 0.671986,
+        "w": 0.2025,
+        "h": 0.322695
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1138.jpg",
+    "width": 500,
+    "height": 368,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.615,
+        "cy": 0.759511,
+        "w": 0.378,
+        "h": 0.383152
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_166.jpg",
+    "width": 242,
+    "height": 269,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.365702,
+        "cy": 0.652416,
+        "w": 0.268595,
+        "h": 0.085502
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_563.jpg",
+    "width": 341,
+    "height": 191,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.27566,
+        "cy": 0.793194,
+        "w": 0.398827,
+        "h": 0.371728
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_80.jpg",
+    "width": 500,
+    "height": 307,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.402,
+        "cy": 0.798046,
+        "w": 0.716,
+        "h": 0.319218
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1338.jpg",
+    "width": 311,
+    "height": 581,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.42926,
+        "cy": 0.497418,
+        "w": 0.665595,
+        "h": 0.919105
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_881.jpg",
+    "width": 527,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.267552,
+        "cy": 0.8,
+        "w": 0.242884,
+        "h": 0.386667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1259.jpg",
+    "width": 800,
+    "height": 561,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.449375,
+        "cy": 0.389483,
+        "w": 0.27125,
+        "h": 0.73262
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_537.jpg",
+    "width": 500,
+    "height": 343,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.623,
+        "cy": 0.814869,
+        "w": 0.582,
+        "h": 0.335277
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_954.jpg",
+    "width": 500,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.165,
+        "cy": 0.704819,
+        "w": 0.206,
+        "h": 0.246988
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.747,
+        "cy": 0.793675,
+        "w": 0.23,
+        "h": 0.183735
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_895.jpg",
+    "width": 500,
+    "height": 339,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.431,
+        "cy": 0.362832,
+        "w": 0.81,
+        "h": 0.377581
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1353.jpg",
+    "width": 366,
+    "height": 134,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.504098,
+        "cy": 0.537313,
+        "w": 0.909836,
+        "h": 0.656716
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_164.jpg",
+    "width": 261,
+    "height": 251,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.490421,
+        "cy": 0.374502,
+        "w": 0.735632,
+        "h": 0.63745
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1200.jpg",
+    "width": 450,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.482222,
+        "cy": 0.603333,
+        "w": 0.235556,
+        "h": 0.793333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_332.jpg",
+    "width": 340,
+    "height": 191,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.586765,
+        "cy": 0.717277,
+        "w": 0.408824,
+        "h": 0.450262
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_451.jpg",
+    "width": 500,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.411,
+        "cy": 0.553333,
+        "w": 0.498,
+        "h": 0.273333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_111.jpg",
+    "width": 282,
+    "height": 170,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.505319,
+        "cy": 0.767647,
+        "w": 0.514184,
+        "h": 0.358824
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1181.jpg",
+    "width": 594,
+    "height": 395,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.484007,
+        "cy": 0.526582,
+        "w": 0.887205,
+        "h": 0.516456
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1098.jpg",
+    "width": 400,
+    "height": 558,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.55,
+        "cy": 0.519713,
+        "w": 0.62,
+        "h": 0.874552
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_571.jpg",
+    "width": 500,
+    "height": 311,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.153,
+        "cy": 0.713826,
+        "w": 0.202,
+        "h": 0.424437
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_467.jpg",
+    "width": 534,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.569288,
+        "cy": 0.356667,
+        "w": 0.516854,
+        "h": 0.606667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_490.jpg",
+    "width": 310,
+    "height": 210,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.332258,
+        "cy": 0.611905,
+        "w": 0.219355,
+        "h": 0.214286
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_361.jpg",
+    "width": 305,
+    "height": 214,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.567213,
+        "cy": 0.670561,
+        "w": 0.281967,
+        "h": 0.331776
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_504.jpg",
+    "width": 329,
+    "height": 197,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.262918,
+        "cy": 0.322335,
+        "w": 0.355623,
+        "h": 0.329949
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.676292,
+        "cy": 0.687817,
+        "w": 0.43465,
+        "h": 0.350254
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_960.jpg",
+    "width": 534,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.56367,
+        "cy": 0.718333,
+        "w": 0.209738,
+        "h": 0.463333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1174.jpg",
+    "width": 208,
+    "height": 312,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.420673,
+        "cy": 0.695513,
+        "w": 0.831731,
+        "h": 0.365385
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1350.jpg",
+    "width": 365,
+    "height": 138,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.513699,
+        "cy": 0.518116,
+        "w": 0.835616,
+        "h": 0.949275
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_46.jpg",
+    "width": 571,
+    "height": 386,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.310858,
+        "cy": 0.760363,
+        "w": 0.390543,
+        "h": 0.380829
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_794.jpg",
+    "width": 499,
+    "height": 309,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.477956,
+        "cy": 0.645631,
+        "w": 0.162325,
+        "h": 0.624595
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_153.jpg",
+    "width": 550,
+    "height": 733,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.593636,
+        "cy": 0.639836,
+        "w": 0.7,
+        "h": 0.474761
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_582.jpg",
+    "width": 500,
+    "height": 315,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.503,
+        "cy": 0.44127,
+        "w": 0.922,
+        "h": 0.463492
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_775.jpg",
+    "width": 450,
+    "height": 210,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.464444,
+        "cy": 0.502381,
+        "w": 0.422222,
+        "h": 0.414286
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_765.jpg",
+    "width": 450,
+    "height": 338,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.515556,
+        "cy": 0.362426,
+        "w": 0.804444,
+        "h": 0.45858
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1243.jpg",
+    "width": 631,
+    "height": 800,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.538827,
+        "cy": 0.5175,
+        "w": 0.526149,
+        "h": 0.6725
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_826.jpg",
+    "width": 496,
+    "height": 280,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.547379,
+        "cy": 0.539286,
+        "w": 0.167339,
+        "h": 0.142857
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1397.jpg",
+    "width": 394,
+    "height": 166,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.53934,
+        "cy": 0.605422,
+        "w": 0.327411,
+        "h": 0.415663
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_606.jpg",
+    "width": 300,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.451667,
+        "cy": 0.496667,
+        "w": 0.55,
+        "h": 0.673333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_219.jpg",
+    "width": 450,
+    "height": 600,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.664444,
+        "cy": 0.37,
+        "w": 0.275556,
+        "h": 0.24
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1442.jpg",
+    "width": 2000,
+    "height": 987,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.2085,
+        "cy": 0.649443,
+        "w": 0.147,
+        "h": 0.279635
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.374,
+        "cy": 0.662107,
+        "w": 0.171,
+        "h": 0.292806
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_66.jpg",
+    "width": 550,
+    "height": 338,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.344545,
+        "cy": 0.784024,
+        "w": 0.514545,
+        "h": 0.153846
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_808.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.499,
+        "cy": 0.522523,
+        "w": 0.886,
+        "h": 0.540541
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_316.jpg",
+    "width": 294,
+    "height": 221,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.60034,
+        "cy": 0.669683,
+        "w": 0.404762,
+        "h": 0.579186
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1056.jpg",
+    "width": 499,
+    "height": 331,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.430862,
+        "cy": 0.483384,
+        "w": 0.172345,
+        "h": 0.229607
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1123.jpg",
+    "width": 500,
+    "height": 358,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.487,
+        "cy": 0.402235,
+        "w": 0.658,
+        "h": 0.715084
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1425.jpg",
+    "width": 450,
+    "height": 297,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.246667,
+        "cy": 0.73064,
+        "w": 0.128889,
+        "h": 0.13468
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1106.jpg",
+    "width": 500,
+    "height": 321,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.564,
+        "cy": 0.38785,
+        "w": 0.568,
+        "h": 0.214953
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_113.jpg",
+    "width": 578,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.145329,
+        "cy": 0.721667,
+        "w": 0.221453,
+        "h": 0.103333
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.643599,
+        "cy": 0.731667,
+        "w": 0.131488,
+        "h": 0.283333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1010.jpg",
+    "width": 300,
+    "height": 197,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.403333,
+        "cy": 0.525381,
+        "w": 0.553333,
+        "h": 0.746193
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_974.jpg",
+    "width": 587,
+    "height": 589,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.500852,
+        "cy": 0.481324,
+        "w": 0.626917,
+        "h": 0.402377
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_798.jpg",
+    "width": 500,
+    "height": 348,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.529,
+        "cy": 0.446839,
+        "w": 0.478,
+        "h": 0.204023
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1428.jpg",
+    "width": 551,
+    "height": 765,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.323956,
+        "cy": 0.735294,
+        "w": 0.549909,
+        "h": 0.260131
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_733.jpg",
+    "width": 383,
+    "height": 272,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.439948,
+        "cy": 0.698529,
+        "w": 0.681462,
+        "h": 0.389706
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_797.jpg",
+    "width": 500,
+    "height": 375,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.674,
+        "cy": 0.517333,
+        "w": 0.184,
+        "h": 0.112
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1037.jpg",
+    "width": 500,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.557,
+        "cy": 0.501667,
+        "w": 0.818,
+        "h": 0.396667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_330.jpg",
+    "width": 313,
+    "height": 209,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.354633,
+        "cy": 0.681818,
+        "w": 0.370607,
+        "h": 0.5311
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1117.jpg",
+    "width": 500,
+    "height": 679,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.577,
+        "cy": 0.402798,
+        "w": 0.57,
+        "h": 0.617084
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1417.jpg",
+    "width": 313,
+    "height": 209,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.84345,
+        "cy": 0.569378,
+        "w": 0.28115,
+        "h": 0.411483
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_162.jpg",
+    "width": 665,
+    "height": 1000,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.67594,
+        "cy": 0.6785,
+        "w": 0.64812,
+        "h": 0.253
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1222.jpg",
+    "width": 665,
+    "height": 213,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.47594,
+        "cy": 0.56338,
+        "w": 0.855639,
+        "h": 0.57277
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_542.jpg",
+    "width": 450,
+    "height": 338,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.218889,
+        "cy": 0.357988,
+        "w": 0.291111,
+        "h": 0.106509
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.407778,
+        "cy": 0.673077,
+        "w": 0.18,
+        "h": 0.322485
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.693333,
+        "cy": 0.505917,
+        "w": 0.368889,
+        "h": 0.159763
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.223333,
+        "cy": 0.64497,
+        "w": 0.175556,
+        "h": 0.319527
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.698889,
+        "cy": 0.397929,
+        "w": 0.117778,
+        "h": 0.097633
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_666.jpg",
+    "width": 317,
+    "height": 205,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.536278,
+        "cy": 0.480488,
+        "w": 0.233438,
+        "h": 0.317073
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_518.jpg",
+    "width": 500,
+    "height": 376,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.482,
+        "cy": 0.56383,
+        "w": 0.772,
+        "h": 0.617021
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_398.jpg",
+    "width": 400,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.48,
+        "cy": 0.63,
+        "w": 0.155,
+        "h": 0.166667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_918.jpg",
+    "width": 533,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.344278,
+        "cy": 0.333333,
+        "w": 0.294559,
+        "h": 0.586667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_281.jpg",
+    "width": 413,
+    "height": 581,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.699758,
+        "cy": 0.555938,
+        "w": 0.489104,
+        "h": 0.340792
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1371.jpg",
+    "width": 635,
+    "height": 374,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.589764,
+        "cy": 0.601604,
+        "w": 0.776378,
+        "h": 0.663102
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_851.jpg",
+    "width": 500,
+    "height": 666,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.471,
+        "cy": 0.638889,
+        "w": 0.434,
+        "h": 0.250751
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1391.jpg",
+    "width": 413,
+    "height": 226,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.491525,
+        "cy": 0.794248,
+        "w": 0.368039,
+        "h": 0.234513
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_49.jpg",
+    "width": 314,
+    "height": 207,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.592357,
+        "cy": 0.758454,
+        "w": 0.350318,
+        "h": 0.183575
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_685.jpg",
+    "width": 490,
+    "height": 325,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.662245,
+        "cy": 0.323077,
+        "w": 0.295918,
+        "h": 0.504615
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_90.jpg",
+    "width": 285,
+    "height": 229,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.354386,
+        "cy": 0.753275,
+        "w": 0.617544,
+        "h": 0.344978
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1304.jpg",
+    "width": 547,
+    "height": 409,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.47075,
+        "cy": 0.53912,
+        "w": 0.140768,
+        "h": 0.114914
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_725.jpg",
+    "width": 322,
+    "height": 384,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.571429,
+        "cy": 0.519531,
+        "w": 0.850932,
+        "h": 0.825521
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_587.jpg",
+    "width": 500,
+    "height": 500,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.54,
+        "cy": 0.426,
+        "w": 0.392,
+        "h": 0.348
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1236.jpg",
+    "width": 653,
+    "height": 297,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.477029,
+        "cy": 0.518519,
+        "w": 0.79173,
+        "h": 0.808081
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1231.jpg",
+    "width": 211,
+    "height": 228,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.42654,
+        "cy": 0.60307,
+        "w": 0.720379,
+        "h": 0.653509
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_694.jpg",
+    "width": 500,
+    "height": 433,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.414,
+        "cy": 0.692841,
+        "w": 0.14,
+        "h": 0.43418
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1126.jpg",
+    "width": 500,
+    "height": 364,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.545,
+        "cy": 0.495879,
+        "w": 0.79,
+        "h": 0.35989
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_607.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.585,
+        "cy": 0.445946,
+        "w": 0.514,
+        "h": 0.405405
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1158.jpg",
+    "width": 319,
+    "height": 480,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.473354,
+        "cy": 0.40625,
+        "w": 0.714734,
+        "h": 0.4375
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_951.jpg",
+    "width": 500,
+    "height": 334,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.458,
+        "cy": 0.622754,
+        "w": 0.78,
+        "h": 0.45509
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_928.jpg",
+    "width": 529,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.659735,
+        "cy": 0.483333,
+        "w": 0.170132,
+        "h": 0.26
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_15.jpg",
+    "width": 190,
+    "height": 253,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.707895,
+        "cy": 0.677866,
+        "w": 0.447368,
+        "h": 0.517787
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1104.jpg",
+    "width": 500,
+    "height": 411,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.596,
+        "cy": 0.843066,
+        "w": 0.444,
+        "h": 0.148418
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_147.jpg",
+    "width": 948,
+    "height": 723,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.669304,
+        "cy": 0.573997,
+        "w": 0.351266,
+        "h": 0.237898
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.376582,
+        "cy": 0.853389,
+        "w": 0.504219,
+        "h": 0.182573
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_273.jpg",
+    "width": 269,
+    "height": 178,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.249071,
+        "cy": 0.789326,
+        "w": 0.446097,
+        "h": 0.162921
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_378.jpg",
+    "width": 500,
+    "height": 375,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.548,
+        "cy": 0.834667,
+        "w": 0.248,
+        "h": 0.325333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1206.jpg",
+    "width": 550,
+    "height": 344,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.48,
+        "cy": 0.609012,
+        "w": 0.418182,
+        "h": 0.636628
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1033.jpg",
+    "width": 500,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.361,
+        "cy": 0.599398,
+        "w": 0.346,
+        "h": 0.608434
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_611.jpg",
+    "width": 449,
+    "height": 350,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.701559,
+        "cy": 0.441429,
+        "w": 0.565702,
+        "h": 0.562857
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_304.jpg",
+    "width": 550,
+    "height": 733,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.605455,
+        "cy": 0.665757,
+        "w": 0.567273,
+        "h": 0.523874
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_816.jpg",
+    "width": 705,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.426241,
+        "cy": 0.443333,
+        "w": 0.296454,
+        "h": 0.88
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_10.jpg",
+    "width": 204,
+    "height": 115,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.32598,
+        "cy": 0.804348,
+        "w": 0.632353,
+        "h": 0.356522
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_690.jpg",
+    "width": 500,
+    "height": 359,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.557,
+        "cy": 0.445682,
+        "w": 0.75,
+        "h": 0.674095
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_706.jpg",
+    "width": 496,
+    "height": 280,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.587702,
+        "cy": 0.442857,
+        "w": 0.147177,
+        "h": 0.25
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1298.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.777,
+        "cy": 0.677177,
+        "w": 0.33,
+        "h": 0.447447
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_399.jpg",
+    "width": 500,
+    "height": 310,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.522,
+        "cy": 0.709677,
+        "w": 0.404,
+        "h": 0.393548
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_934.jpg",
+    "width": 391,
+    "height": 220,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.542199,
+        "cy": 0.509091,
+        "w": 0.915601,
+        "h": 0.545455
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_978.jpg",
+    "width": 500,
+    "height": 348,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.686,
+        "cy": 0.813218,
+        "w": 0.532,
+        "h": 0.258621
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_926.jpg",
+    "width": 950,
+    "height": 633,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.474737,
+        "cy": 0.776461,
+        "w": 0.181053,
+        "h": 0.387046
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_86.jpg",
+    "width": 265,
+    "height": 181,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.4,
+        "cy": 0.69337,
+        "w": 0.701887,
+        "h": 0.248619
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_257.jpg",
+    "width": 480,
+    "height": 399,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.603125,
+        "cy": 0.749373,
+        "w": 0.514583,
+        "h": 0.390977
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1196.jpg",
+    "width": 550,
+    "height": 367,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.483636,
+        "cy": 0.490463,
+        "w": 0.723636,
+        "h": 0.80654
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_648.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.559,
+        "cy": 0.321321,
+        "w": 0.346,
+        "h": 0.624625
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1329.jpg",
+    "width": 690,
+    "height": 518,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.486232,
+        "cy": 0.484556,
+        "w": 0.508696,
+        "h": 0.30888
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_635.jpg",
+    "width": 236,
+    "height": 276,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.444915,
+        "cy": 0.876812,
+        "w": 0.466102,
+        "h": 0.231884
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_191.jpg",
+    "width": 499,
+    "height": 366,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.440882,
+        "cy": 0.722678,
+        "w": 0.765531,
+        "h": 0.396175
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1003.jpg",
+    "width": 500,
+    "height": 674,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.57,
+        "cy": 0.656528,
+        "w": 0.748,
+        "h": 0.34273
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_547.jpg",
+    "width": 500,
+    "height": 329,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.608,
+        "cy": 0.279635,
+        "w": 0.588,
+        "h": 0.443769
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1291.jpg",
+    "width": 504,
+    "height": 257,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.458333,
+        "cy": 0.511673,
+        "w": 0.880952,
+        "h": 0.758755
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_511.jpg",
+    "width": 533,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.579737,
+        "cy": 0.556667,
+        "w": 0.183865,
+        "h": 0.12
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_248.jpg",
+    "width": 950,
+    "height": 740,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.374737,
+        "cy": 0.271622,
+        "w": 0.72,
+        "h": 0.440541
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_998.jpg",
+    "width": 315,
+    "height": 207,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.184127,
+        "cy": 0.400966,
+        "w": 0.298413,
+        "h": 0.357488
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.549206,
+        "cy": 0.550725,
+        "w": 0.488889,
+        "h": 0.492754
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_968.jpg",
+    "width": 500,
+    "height": 360,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.476,
+        "cy": 0.784722,
+        "w": 0.94,
+        "h": 0.358333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_929.jpg",
+    "width": 499,
+    "height": 307,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.425852,
+        "cy": 0.578176,
+        "w": 0.498998,
+        "h": 0.348534
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_701.jpg",
+    "width": 150,
+    "height": 150,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.383333,
+        "cy": 0.536667,
+        "w": 0.726667,
+        "h": 0.286667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1210.jpg",
+    "width": 500,
+    "height": 419,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.485,
+        "cy": 0.652745,
+        "w": 0.858,
+        "h": 0.632458
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1019.jpg",
+    "width": 530,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.523585,
+        "cy": 0.44,
+        "w": 0.941509,
+        "h": 0.513333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_732.jpg",
+    "width": 500,
+    "height": 357,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.568,
+        "cy": 0.708683,
+        "w": 0.472,
+        "h": 0.392157
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_169.jpg",
+    "width": 221,
+    "height": 295,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.497738,
+        "cy": 0.805085,
+        "w": 0.352941,
+        "h": 0.383051
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_688.jpg",
+    "width": 500,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.558,
+        "cy": 0.811667,
+        "w": 0.324,
+        "h": 0.376667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_573.jpg",
+    "width": 500,
+    "height": 310,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.487,
+        "cy": 0.566129,
+        "w": 0.838,
+        "h": 0.745161
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_810.jpg",
+    "width": 500,
+    "height": 344,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.488,
+        "cy": 0.513081,
+        "w": 0.896,
+        "h": 0.305233
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_412.jpg",
+    "width": 768,
+    "height": 576,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.236328,
+        "cy": 0.703125,
+        "w": 0.313802,
+        "h": 0.385417
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_419.jpg",
+    "width": 600,
+    "height": 425,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.3475,
+        "cy": 0.831765,
+        "w": 0.588333,
+        "h": 0.190588
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1115.jpg",
+    "width": 400,
+    "height": 228,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.56125,
+        "cy": 0.576754,
+        "w": 0.5475,
+        "h": 0.79386
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_811.jpg",
+    "width": 269,
+    "height": 187,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.47026,
+        "cy": 0.516043,
+        "w": 0.806691,
+        "h": 0.786096
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_988.jpg",
+    "width": 500,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.509,
+        "cy": 0.543675,
+        "w": 0.234,
+        "h": 0.165663
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1295.jpg",
+    "width": 332,
+    "height": 220,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.39006,
+        "cy": 0.829545,
+        "w": 0.225904,
+        "h": 0.322727
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_87.jpg",
+    "width": 313,
+    "height": 209,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.785942,
+        "cy": 0.447368,
+        "w": 0.29393,
+        "h": 0.435407
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1282.jpg",
+    "width": 213,
+    "height": 151,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.460094,
+        "cy": 0.539735,
+        "w": 0.666667,
+        "h": 0.602649
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1201.jpg",
+    "width": 410,
+    "height": 261,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.518293,
+        "cy": 0.718391,
+        "w": 0.690244,
+        "h": 0.249042
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1085.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.484,
+        "cy": 0.503003,
+        "w": 0.884,
+        "h": 0.249249
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1168.jpg",
+    "width": 319,
+    "height": 205,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.626959,
+        "cy": 0.631707,
+        "w": 0.30094,
+        "h": 0.239024
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_620.jpg",
+    "width": 500,
+    "height": 342,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.576,
+        "cy": 0.669591,
+        "w": 0.264,
+        "h": 0.415205
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_651.jpg",
+    "width": 437,
+    "height": 266,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.473684,
+        "cy": 0.578947,
+        "w": 0.572082,
+        "h": 0.43609
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1255.jpg",
+    "width": 800,
+    "height": 533,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.4825,
+        "cy": 0.58349,
+        "w": 0.6725,
+        "h": 0.424015
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_916.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.648,
+        "cy": 0.777778,
+        "w": 0.276,
+        "h": 0.252252
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_376.jpg",
+    "width": 165,
+    "height": 220,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.448485,
+        "cy": 0.727273,
+        "w": 0.30303,
+        "h": 0.509091
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_445.jpg",
+    "width": 284,
+    "height": 229,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.422535,
+        "cy": 0.816594,
+        "w": 0.802817,
+        "h": 0.340611
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_789.jpg",
+    "width": 500,
+    "height": 329,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.51,
+        "cy": 0.694529,
+        "w": 0.576,
+        "h": 0.483283
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_5.jpg",
+    "width": 900,
+    "height": 696,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.611111,
+        "cy": 0.566092,
+        "w": 0.568889,
+        "h": 0.313218
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_790.jpg",
+    "width": 293,
+    "height": 220,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.52901,
+        "cy": 0.6,
+        "w": 0.354949,
+        "h": 0.3
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_190.jpg",
+    "width": 288,
+    "height": 226,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.279514,
+        "cy": 0.732301,
+        "w": 0.447917,
+        "h": 0.349558
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_705.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.341,
+        "cy": 0.509009,
+        "w": 0.634,
+        "h": 0.489489
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_979.jpg",
+    "width": 500,
+    "height": 559,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.506,
+        "cy": 0.367621,
+        "w": 0.324,
+        "h": 0.37746
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_160.jpg",
+    "width": 600,
+    "height": 450,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.493333,
+        "cy": 0.727778,
+        "w": 0.33,
+        "h": 0.348889
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_993.jpg",
+    "width": 532,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.646617,
+        "cy": 0.245,
+        "w": 0.469925,
+        "h": 0.41
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_194.jpg",
+    "width": 496,
+    "height": 280,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.367944,
+        "cy": 0.839286,
+        "w": 0.639113,
+        "h": 0.3
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1263.jpg",
+    "width": 800,
+    "height": 558,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.661875,
+        "cy": 0.419355,
+        "w": 0.33625,
+        "h": 0.562724
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_556.jpg",
+    "width": 500,
+    "height": 373,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.444,
+        "cy": 0.344504,
+        "w": 0.784,
+        "h": 0.329759
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_898.jpg",
+    "width": 499,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.541082,
+        "cy": 0.436747,
+        "w": 0.681363,
+        "h": 0.361446
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_439.jpg",
+    "width": 500,
+    "height": 308,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.562,
+        "cy": 0.501623,
+        "w": 0.836,
+        "h": 0.548701
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_631.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.482,
+        "cy": 0.490991,
+        "w": 0.824,
+        "h": 0.465465
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1393.jpg",
+    "width": 550,
+    "height": 413,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.63,
+        "cy": 0.723971,
+        "w": 0.594545,
+        "h": 0.198547
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_288.jpg",
+    "width": 320,
+    "height": 240,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.46875,
+        "cy": 0.733333,
+        "w": 0.78125,
+        "h": 0.516667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_758.jpg",
+    "width": 533,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.517824,
+        "cy": 0.841667,
+        "w": 0.232645,
+        "h": 0.316667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1390.jpg",
+    "width": 350,
+    "height": 397,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.425714,
+        "cy": 0.767003,
+        "w": 0.737143,
+        "h": 0.214106
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1120.jpg",
+    "width": 500,
+    "height": 314,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.309,
+        "cy": 0.601911,
+        "w": 0.454,
+        "h": 0.267516
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_2.jpg",
+    "width": 2000,
+    "height": 978,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.3475,
+        "cy": 0.667178,
+        "w": 0.139,
+        "h": 0.084867
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.564,
+        "cy": 0.640082,
+        "w": 0.089,
+        "h": 0.173824
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_449.jpg",
+    "width": 500,
+    "height": 334,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.451,
+        "cy": 0.555389,
+        "w": 0.218,
+        "h": 0.308383
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_29.jpg",
+    "width": 500,
+    "height": 324,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.454,
+        "cy": 0.535494,
+        "w": 0.248,
+        "h": 0.805556
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_987.jpg",
+    "width": 500,
+    "height": 361,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.438,
+        "cy": 0.572022,
+        "w": 0.868,
+        "h": 0.606648
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1426.jpg",
+    "width": 440,
+    "height": 587,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.335227,
+        "cy": 0.310051,
+        "w": 0.570455,
+        "h": 0.166951
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.661364,
+        "cy": 0.679727,
+        "w": 0.440909,
+        "h": 0.44293
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.630682,
+        "cy": 0.124361,
+        "w": 0.352273,
+        "h": 0.054514
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1100.jpg",
+    "width": 500,
+    "height": 465,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.393,
+        "cy": 0.404301,
+        "w": 0.646,
+        "h": 0.619355
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_305.jpg",
+    "width": 404,
+    "height": 719,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.514851,
+        "cy": 0.641168,
+        "w": 0.866337,
+        "h": 0.400556
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1407.jpg",
+    "width": 205,
+    "height": 319,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.368293,
+        "cy": 0.675549,
+        "w": 0.55122,
+        "h": 0.141066
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_739.jpg",
+    "width": 500,
+    "height": 377,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.64,
+        "cy": 0.579576,
+        "w": 0.672,
+        "h": 0.591512
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_892.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.636,
+        "cy": 0.5,
+        "w": 0.62,
+        "h": 0.831832
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_202.jpg",
+    "width": 660,
+    "height": 496,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.364394,
+        "cy": 0.760081,
+        "w": 0.55,
+        "h": 0.358871
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_409.jpg",
+    "width": 396,
+    "height": 296,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.34596,
+        "cy": 0.758446,
+        "w": 0.237374,
+        "h": 0.415541
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_562.jpg",
+    "width": 500,
+    "height": 375,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.373,
+        "cy": 0.553333,
+        "w": 0.462,
+        "h": 0.205333
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.513,
+        "cy": 0.282667,
+        "w": 0.254,
+        "h": 0.165333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1300.jpg",
+    "width": 600,
+    "height": 450,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.453333,
+        "cy": 0.831111,
+        "w": 0.54,
+        "h": 0.328889
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_995.jpg",
+    "width": 500,
+    "height": 719,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.507,
+        "cy": 0.358832,
+        "w": 0.826,
+        "h": 0.447844
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_697.jpg",
+    "width": 440,
+    "height": 330,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.464773,
+        "cy": 0.660606,
+        "w": 0.211364,
+        "h": 0.351515
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1315.jpg",
+    "width": 550,
+    "height": 310,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.521818,
+        "cy": 0.543548,
+        "w": 0.392727,
+        "h": 0.241935
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_883.jpg",
+    "width": 306,
+    "height": 433,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.480392,
+        "cy": 0.650115,
+        "w": 0.954248,
+        "h": 0.450346
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_835.jpg",
+    "width": 331,
+    "height": 220,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.489426,
+        "cy": 0.272727,
+        "w": 0.598187,
+        "h": 0.390909
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1130.jpg",
+    "width": 258,
+    "height": 187,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.773256,
+        "cy": 0.796791,
+        "w": 0.22093,
+        "h": 0.192513
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_907.jpg",
+    "width": 505,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.509901,
+        "cy": 0.546667,
+        "w": 0.445545,
+        "h": 0.726667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_198.jpg",
+    "width": 264,
+    "height": 183,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.337121,
+        "cy": 0.614754,
+        "w": 0.204545,
+        "h": 0.224044
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1388.jpg",
+    "width": 282,
+    "height": 171,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.617021,
+        "cy": 0.657895,
+        "w": 0.758865,
+        "h": 0.614035
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_363.jpg",
+    "width": 190,
+    "height": 254,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.297368,
+        "cy": 0.708661,
+        "w": 0.552632,
+        "h": 0.566929
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_391.jpg",
+    "width": 269,
+    "height": 179,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.650558,
+        "cy": 0.706704,
+        "w": 0.639405,
+        "h": 0.251397
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_130.jpg",
+    "width": 500,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.507,
+        "cy": 0.631024,
+        "w": 0.19,
+        "h": 0.490964
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_381.jpg",
+    "width": 867,
+    "height": 600,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.415225,
+        "cy": 0.781667,
+        "w": 0.385236,
+        "h": 0.266667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_884.jpg",
+    "width": 534,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.61236,
+        "cy": 0.335,
+        "w": 0.539326,
+        "h": 0.663333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_546.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.583,
+        "cy": 0.477477,
+        "w": 0.626,
+        "h": 0.486486
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_967.jpg",
+    "width": 500,
+    "height": 332,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.474,
+        "cy": 0.551205,
+        "w": 0.72,
+        "h": 0.807229
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_961.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.49,
+        "cy": 0.665165,
+        "w": 0.716,
+        "h": 0.333333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1186.jpg",
+    "width": 600,
+    "height": 360,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.470833,
+        "cy": 0.452778,
+        "w": 0.841667,
+        "h": 0.627778
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_983.jpg",
+    "width": 500,
+    "height": 337,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.475,
+        "cy": 0.501484,
+        "w": 0.55,
+        "h": 0.854599
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1147.jpg",
+    "width": 356,
+    "height": 480,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.567416,
+        "cy": 0.511458,
+        "w": 0.764045,
+        "h": 0.58125
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_239.jpg",
+    "width": 440,
+    "height": 248,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.686364,
+        "cy": 0.824597,
+        "w": 0.513636,
+        "h": 0.237903
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1423.jpg",
+    "width": 275,
+    "height": 175,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.232727,
+        "cy": 0.742857,
+        "w": 0.334545,
+        "h": 0.468571
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_931.jpg",
+    "width": 400,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.52625,
+        "cy": 0.538333,
+        "w": 0.3025,
+        "h": 0.65
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1082.jpg",
+    "width": 500,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.501,
+        "cy": 0.471667,
+        "w": 0.71,
+        "h": 0.303333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1127.jpg",
+    "width": 500,
+    "height": 382,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.494,
+        "cy": 0.784031,
+        "w": 0.128,
+        "h": 0.431937
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1354.jpg",
+    "width": 258,
+    "height": 318,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.414729,
+        "cy": 0.544025,
+        "w": 0.775194,
+        "h": 0.742138
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_777.jpg",
+    "width": 500,
+    "height": 625,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.347,
+        "cy": 0.648,
+        "w": 0.442,
+        "h": 0.5824
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_375.jpg",
+    "width": 500,
+    "height": 888,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.487,
+        "cy": 0.466216,
+        "w": 0.242,
+        "h": 0.164414
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_852.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.505,
+        "cy": 0.621622,
+        "w": 0.31,
+        "h": 0.198198
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_871.jpg",
+    "width": 640,
+    "height": 480,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.702344,
+        "cy": 0.432292,
+        "w": 0.595313,
+        "h": 0.577083
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_247.jpg",
+    "width": 256,
+    "height": 188,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.451172,
+        "cy": 0.731383,
+        "w": 0.339844,
+        "h": 0.18617
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_73.jpg",
+    "width": 337,
+    "height": 193,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.575668,
+        "cy": 0.556995,
+        "w": 0.635015,
+        "h": 0.419689
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1145.jpg",
+    "width": 500,
+    "height": 756,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.476,
+        "cy": 0.848545,
+        "w": 0.624,
+        "h": 0.130952
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_407.jpg",
+    "width": 400,
+    "height": 491,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.75125,
+        "cy": 0.762729,
+        "w": 0.4725,
+        "h": 0.319756
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_123.jpg",
+    "width": 298,
+    "height": 219,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.60906,
+        "cy": 0.812785,
+        "w": 0.560403,
+        "h": 0.273973
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_700.jpg",
+    "width": 313,
+    "height": 205,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.335463,
+        "cy": 0.685366,
+        "w": 0.594249,
+        "h": 0.473171
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_557.jpg",
+    "width": 448,
+    "height": 336,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.522321,
+        "cy": 0.505952,
+        "w": 0.598214,
+        "h": 0.755952
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1078.jpg",
+    "width": 500,
+    "height": 368,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.626,
+        "cy": 0.870924,
+        "w": 0.624,
+        "h": 0.1875
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_193.jpg",
+    "width": 500,
+    "height": 361,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.665,
+        "cy": 0.580332,
+        "w": 0.53,
+        "h": 0.3241
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_825.jpg",
+    "width": 500,
+    "height": 563,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.606,
+        "cy": 0.110124,
+        "w": 0.756,
+        "h": 0.149201
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_342.jpg",
+    "width": 213,
+    "height": 204,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.542254,
+        "cy": 0.45098,
+        "w": 0.286385,
+        "h": 0.558824
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_370.jpg",
+    "width": 500,
+    "height": 325,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.58,
+        "cy": 0.66,
+        "w": 0.216,
+        "h": 0.286154
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.836,
+        "cy": 0.795385,
+        "w": 0.248,
+        "h": 0.249231
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1179.jpg",
+    "width": 594,
+    "height": 396,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.601852,
+        "cy": 0.314394,
+        "w": 0.658249,
+        "h": 0.441919
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_41.jpg",
+    "width": 292,
+    "height": 164,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.472603,
+        "cy": 0.670732,
+        "w": 0.267123,
+        "h": 0.207317
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1170.jpg",
+    "width": 550,
+    "height": 362,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.532727,
+        "cy": 0.401934,
+        "w": 0.923636,
+        "h": 0.68232
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_992.jpg",
+    "width": 440,
+    "height": 586,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.505682,
+        "cy": 0.464164,
+        "w": 0.602273,
+        "h": 0.187713
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_328.jpg",
+    "width": 294,
+    "height": 221,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.719388,
+        "cy": 0.524887,
+        "w": 0.438776,
+        "h": 0.289593
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1399.jpg",
+    "width": 400,
+    "height": 533,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.58,
+        "cy": 0.69606,
+        "w": 0.835,
+        "h": 0.292683
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1287.jpg",
+    "width": 730,
+    "height": 273,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.486301,
+        "cy": 0.507326,
+        "w": 0.841096,
+        "h": 0.824176
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_971.jpg",
+    "width": 500,
+    "height": 336,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.551,
+        "cy": 0.495536,
+        "w": 0.774,
+        "h": 0.699405
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_334.jpg",
+    "width": 223,
+    "height": 270,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.432735,
+        "cy": 0.805556,
+        "w": 0.452915,
+        "h": 0.381481
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_489.jpg",
+    "width": 499,
+    "height": 331,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.503006,
+        "cy": 0.273414,
+        "w": 0.765531,
+        "h": 0.317221
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1294.jpg",
+    "width": 570,
+    "height": 382,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.544737,
+        "cy": 0.679319,
+        "w": 0.587719,
+        "h": 0.363874
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_101.jpg",
+    "width": 324,
+    "height": 201,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.854938,
+        "cy": 0.621891,
+        "w": 0.166667,
+        "h": 0.348259
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_218.jpg",
+    "width": 257,
+    "height": 187,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.525292,
+        "cy": 0.729947,
+        "w": 0.583658,
+        "h": 0.379679
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_799.jpg",
+    "width": 500,
+    "height": 375,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.525,
+        "cy": 0.544,
+        "w": 0.802,
+        "h": 0.645333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_538.jpg",
+    "width": 500,
+    "height": 334,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.492,
+        "cy": 0.586826,
+        "w": 0.444,
+        "h": 0.419162
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1409.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.432,
+        "cy": 0.678679,
+        "w": 0.228,
+        "h": 0.630631
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_483.jpg",
+    "width": 500,
+    "height": 322,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.375,
+        "cy": 0.267081,
+        "w": 0.614,
+        "h": 0.440994
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_990.jpg",
+    "width": 499,
+    "height": 325,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.524048,
+        "cy": 0.763077,
+        "w": 0.370741,
+        "h": 0.332308
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_91.jpg",
+    "width": 640,
+    "height": 406,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.592969,
+        "cy": 0.565271,
+        "w": 0.751563,
+        "h": 0.3867
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1367.jpg",
+    "width": 322,
+    "height": 187,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.428571,
+        "cy": 0.454545,
+        "w": 0.63354,
+        "h": 0.727273
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_747.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.307,
+        "cy": 0.68018,
+        "w": 0.27,
+        "h": 0.201201
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1047.jpg",
+    "width": 500,
+    "height": 310,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.341,
+        "cy": 0.396774,
+        "w": 0.198,
+        "h": 0.167742
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.605,
+        "cy": 0.280645,
+        "w": 0.186,
+        "h": 0.090323
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.656,
+        "cy": 0.727419,
+        "w": 0.3,
+        "h": 0.435484
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_821.jpg",
+    "width": 500,
+    "height": 313,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.351,
+        "cy": 0.527157,
+        "w": 0.682,
+        "h": 0.383387
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_643.jpg",
+    "width": 500,
+    "height": 313,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.458,
+        "cy": 0.543131,
+        "w": 0.788,
+        "h": 0.837061
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1432.jpg",
+    "width": 950,
+    "height": 628,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.685263,
+        "cy": 0.776274,
+        "w": 0.372632,
+        "h": 0.272293
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1404.jpg",
+    "width": 267,
+    "height": 181,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.503745,
+        "cy": 0.643646,
+        "w": 0.707865,
+        "h": 0.458564
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1172.jpg",
+    "width": 550,
+    "height": 268,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.574545,
+        "cy": 0.563433,
+        "w": 0.621818,
+        "h": 0.425373
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1053.jpg",
+    "width": 499,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.738477,
+        "cy": 0.417417,
+        "w": 0.49499,
+        "h": 0.678679
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1057.jpg",
+    "width": 519,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.513487,
+        "cy": 0.545,
+        "w": 0.603083,
+        "h": 0.723333
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_488.jpg",
+    "width": 500,
+    "height": 306,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.439,
+        "cy": 0.643791,
+        "w": 0.718,
+        "h": 0.568627
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_800.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.583,
+        "cy": 0.403904,
+        "w": 0.586,
+        "h": 0.285285
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1160.jpg",
+    "width": 295,
+    "height": 221,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.432203,
+        "cy": 0.588235,
+        "w": 0.613559,
+        "h": 0.217195
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_717.jpg",
+    "width": 521,
+    "height": 300,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.59405,
+        "cy": 0.691667,
+        "w": 0.666027,
+        "h": 0.436667
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_96.jpg",
+    "width": 269,
+    "height": 179,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.578067,
+        "cy": 0.689944,
+        "w": 0.36803,
+        "h": 0.374302
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1189.jpg",
+    "width": 550,
+    "height": 335,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.729091,
+        "cy": 0.586567,
+        "w": 0.338182,
+        "h": 0.814925
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1257.jpg",
+    "width": 800,
+    "height": 533,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.389375,
+        "cy": 0.414634,
+        "w": 0.22125,
+        "h": 0.322702
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1414.jpg",
+    "width": 221,
+    "height": 295,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.628959,
+        "cy": 0.720339,
+        "w": 0.434389,
+        "h": 0.138983
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_157.jpg",
+    "width": 234,
+    "height": 279,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.25641,
+        "cy": 0.883513,
+        "w": 0.435897,
+        "h": 0.218638
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.600427,
+        "cy": 0.689964,
+        "w": 0.397436,
+        "h": 0.125448
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_212.jpg",
+    "width": 600,
+    "height": 400,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.550833,
+        "cy": 0.6375,
+        "w": 0.205,
+        "h": 0.325
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1044.jpg",
+    "width": 480,
+    "height": 330,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.601042,
+        "cy": 0.624242,
+        "w": 0.614583,
+        "h": 0.575758
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_1205.jpg",
+    "width": 300,
+    "height": 210,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.65,
+        "cy": 0.364286,
+        "w": 0.193333,
+        "h": 0.385714
+      }
+    ],
+    "label": "fall"
+  },
+  {
+    "image": "fall_891.jpg",
+    "width": 500,
+    "height": 333,
+    "boxes": [
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.115,
+        "cy": 0.570571,
+        "w": 0.17,
+        "h": 0.228228
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.248,
+        "cy": 0.818318,
+        "w": 0.3,
+        "h": 0.255255
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.403,
+        "cy": 0.630631,
+        "w": 0.246,
+        "h": 0.222222
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.846,
+        "cy": 0.584084,
+        "w": 0.12,
+        "h": 0.237237
+      },
+      {
+        "class_id": 0,
+        "class_name": "fall",
+        "cx": 0.566,
+        "cy": 0.237237,
+        "w": 0.396,
+        "h": 0.114114
+      }
+    ],
+    "label": "fall"
+  }
+]

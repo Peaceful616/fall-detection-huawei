@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>train</folder>
+  <filename>1758105142567.jpg</filename>
+  <path>C:\Users\LiKang\Desktop\XML_Dataset\JPEGImages\train\1758105142567.jpg</path>
+  <source>
+    <database>Unknown</database>
+  </source>
+  <size>
+    <width>640</width>
+    <height>359</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>Falling</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>187</xmin>
+      <ymin>117</ymin>
+      <xmax>360</xmax>
+      <ymax>238</ymax>
+    </bndbox>
+  </object>
+</annotation>
