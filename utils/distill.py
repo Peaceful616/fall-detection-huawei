@@ -112,10 +112,12 @@ class DistillLoss(nn.Module):
         super().__init__()
         self.cfg = cfg
         self.ce = nn.CrossEntropyLoss()
-        # 特征对齐：从教师通道数到学生通道数
-        # 假设教师 feat 通道为 256, 学生 feat 通道为 128 (backbone P4)
-        self.feat_align_slowfast = nn.Conv3d(256, 128, 1)  # 3D conv for (B,C,T,H,W)
-        self.feat_align_video_swin = nn.Linear(96, 32)
+        # 特征对齐：从教师通道数到学生 backbone_feat 通道数（YOLOv8s P4 = 256）
+        student_backbone_c = cfg.adapter_c_in  # 256 (YOLOv8s P4)
+        # SlowFast 教师 feat 通道 256, 学生 256
+        self.feat_align_slowfast = nn.Conv3d(256, student_backbone_c, 1)
+        # VideoSwin 教师 feat 通道 96, 学生 adapter_c_out = 64
+        self.feat_align_video_swin = nn.Linear(96, cfg.adapter_c_out)
 
     def forward(self, student_out: dict, teacher_outs: dict, labels: torch.Tensor,
                alpha_modal: float = None):
