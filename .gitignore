@@ -42,3 +42,10 @@ wandb/
 # OS
 .DS_Store
 Thumbs.db
+
+# 数据集不入库
+data/bafd6/
+data/bafd6_adapted/
+data/fall_set/
+data/le2i/
+scripts/_*.py
