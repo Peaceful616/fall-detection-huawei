@@ -70,12 +70,44 @@ Assuming ~1000 videos, 16 frames each at 224x224 JPEG (~30 KB/frame):
 - Per video: ~480 KB
 - Total: ~480 MB (well within 50 GB data disk)
 
+### 6. SlowFast Teacher Model Upgrade
+
+**Modified:** `models/teachers.py`
+
+Replaced the hand-rolled `SlowFastTeacher` (1.17M params, randomly initialized) with the official PyTorchVideo SlowFast R50 pretrained on Kinetics 400:
+
+```python
+self.model = torch.hub.load(
+    "facebookresearch/pytorchvideo:main",
+    "slowfast_r50",
+    pretrained=True,
+)
+# Replace final classification head
+in_features = self.model.blocks[-1].proj.in_features
+self.model.blocks[-1].proj = nn.Linear(in_features, num_classes)
+```
+
+This addresses the failure of the original lightweight model to converge on the binary fall/no-fall task (loss stayed ~0.69, accuracy ~52%). The pretrained backbone provides meaningful spatiotemporal features and much larger capacity (~32.8M params).
+
+**Input format:**
+- SlowFast expects input shaped `(B, C, T, H, W)`
+- Slow pathway samples every 4th frame: `x[:, :, ::4, :, :]`
+- Fast pathway uses the original frame rate
+- Both are passed as a list `[slow, fast]`
+
+**Dependencies:**
+- `pytorchvideo>=0.1.5`
+- `Pillow>=9.0`
+
 ### Usage
 
 ```bash
 # Step 1: Pre-decode (one-time, ~5-10 min)
 python scripts/predecode_videos.py --data_root ./data/kaggle_fall
 
-# Step 2: Train (auto-detects pre-decoded frames)
-python scripts/train_teachers.py --teacher slowfast --batch_size 8 --epochs 100
+# Step 2: Install new dependency
+pip install pytorchvideo Pillow
+
+# Step 3: Train SlowFast (reduce batch size due to larger model)
+python scripts/train_teachers.py --teacher slowfast --batch_size 4 --epochs 100 --lr 1e-4
 ```

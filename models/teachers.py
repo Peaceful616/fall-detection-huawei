@@ -8,10 +8,47 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-# ============ SlowFast 教师（3D-CNN）============
+# ============ SlowFast 教师（3D-CNN，官方预训练权重）============
+
+class SlowFastTeacher(nn.Module):
+    """SlowFast 教师模型
+
+    使用 pytorchvideo 官方 SlowFast R50 预训练权重作为 backbone，
+    替换最后的分类头为当前任务的分类头。
+
+    输入: (B, T, 3, H, W) - 视频片段
+    输出:
+        logits: (B, num_classes)
+        feat_list: List[Tensor] - 供特征蒸馏
+    """
+
+    def __init__(self, num_classes: int = 5):
+        super().__init__()
+        self.model = torch.hub.load(
+            "facebookresearch/pytorchvideo:main",
+            "slowfast_r50",
+            pretrained=True,
+        )
+        # 替换最后的分类头
+        in_features = self.model.blocks[-1].proj.in_features
+        self.model.blocks[-1].proj = nn.Linear(in_features, num_classes)
+        self.num_classes = num_classes
+
+    def forward(self, x):
+        # x: (B, T, 3, H, W) → (B, 3, T, H, W)
+        x = x.permute(0, 2, 1, 3, 4).contiguous()
+        # Slow pathway: 每隔 4 帧取一帧
+        slow = x[:, :, ::4, :, :]
+        # Fast pathway: 原始帧率
+        fast = x
+        # 官方 SlowFast 输入格式是 list [slow, fast]
+        logits = self.model([slow, fast])
+        # 提取 logits 作为特征蒸馏用（后续可扩展为多层特征）
+        return {"logits": logits, "feat_list": [logits]}
+
 
 class SlowPathway(nn.Module):
-    """SlowPathway：低帧率、大通道"""
+    """SlowPathway：低帧率、大通道（占位实现，用于兼容）"""
 
     def __init__(self, c_in=3, c_out=64):
         super().__init__()
@@ -28,11 +65,11 @@ class SlowPathway(nn.Module):
 
     def forward(self, x):
         x = self.act(self.bn(self.conv(x)))
-        return self.layer(x)  # (B, 256, T/2, H/4, W/4)
+        return self.layer(x)
 
 
 class FastPathway(nn.Module):
-    """FastPathway：高帧率、小通道"""
+    """FastPathway：高帧率、小通道（占位实现，用于兼容）"""
 
     def __init__(self, c_in=3, c_out=8):
         super().__init__()
@@ -50,42 +87,6 @@ class FastPathway(nn.Module):
     def forward(self, x):
         x = self.act(self.bn(self.conv(x)))
         return self.layer(x)
-
-
-class SlowFastTeacher(nn.Module):
-    """SlowFast 教师模型
-
-    输入: (B, T, 3, H, W) - 视频片段
-    输出:
-        logits: (B, num_classes)
-        feat_list: List[Tensor] - 供特征蒸馏
-    """
-
-    def __init__(self, num_classes: int = 5):
-        super().__init__()
-        self.slow = SlowPathway(c_in=3, c_out=64)
-        self.fast = FastPathway(c_in=3, c_out=8)
-        # lateral: 把 fast 通道对齐到 slow
-        self.lateral = nn.Conv3d(32, 256, 1)
-        self.pool = nn.AdaptiveAvgPool3d(1)
-        # fused 通道 = slow(256) + fast_aligned(256) = 512
-        self.fc = nn.Linear(256 + 256, num_classes)
-
-    def forward(self, x):
-        # x: (B, T, 3, H, W) → (B, 3, T, H, W)
-        x = x.permute(0, 2, 1, 3, 4).contiguous()
-        slow_feat = self.slow(x)        # (B, 256, T/2, H/4, W/4)
-        fast_feat = self.fast(x)       # (B, 32, T, H/4, W/4)
-        # 对齐时序与空间尺寸
-        if fast_feat.shape[2:] != slow_feat.shape[2:]:
-            fast_feat = F.interpolate(fast_feat, size=slow_feat.shape[2:], mode='trilinear', align_corners=False)
-        T_min = min(slow_feat.size(2), fast_feat.size(2))
-        slow_feat = slow_feat[:, :, :T_min]
-        fast_feat = fast_feat[:, :, :T_min]
-        fast_aligned = self.lateral(fast_feat)
-        fused = torch.cat([slow_feat, fast_aligned], dim=1)
-        pooled = self.pool(fused).flatten(1)
-        return {"logits": self.fc(pooled), "feat_list": [slow_feat, fast_feat]}
 
 
 # ============ VideoSwin 教师（Video Transformer 简化版）============
