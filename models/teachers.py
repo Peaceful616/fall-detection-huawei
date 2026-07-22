@@ -36,10 +36,14 @@ class SlowFastTeacher(nn.Module):
 
     def forward(self, x):
         # x: (B, T, 3, H, W) → (B, 3, T, H, W)
-        x = x.permute(0, 2, 1, 3, 4).contiguous()
-        # Slow pathway: 每隔 4 帧取一帧
+        x = x.permute(0, 2, 1, 3, 4).contiguous()  # (B, 3, 16, H, W)
+        # 预解码只保存了 16 帧，但 SlowFast R50 8x8 需要 fast=32 / slow=8 帧。
+        # 使用三线性插值把时序维度从 16 扩展到 32，避免重新预解码。
+        x = F.interpolate(x, size=(32, x.size(-2), x.size(-1)),
+                          mode='trilinear', align_corners=False)
+        # Slow pathway: 每隔 4 帧取一帧 -> T=8
         slow = x[:, :, ::4, :, :]
-        # Fast pathway: 原始帧率
+        # Fast pathway: 原始帧率 -> T=32
         fast = x
         # 官方 SlowFast 输入格式是 list [slow, fast]
         logits = self.model([slow, fast])

@@ -7,6 +7,7 @@ av>=10.0                   # PyAV for video
 onnx>=1.13
 onnx-simplifier>=0.4
 pytorchvideo>=0.1.5        # SlowFast 官方预训练权重
+fvcore>=0.1.5              # pytorchvideo 依赖
 Pillow>=9.0                # PIL 读取预解码帧
 
 # 端侧部署（可选，按需安装）
