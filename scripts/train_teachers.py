@@ -15,6 +15,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.cuda.amp import autocast, GradScaler
 
 from configs.default import cfg
 from models.teachers import build_teacher
@@ -22,21 +23,28 @@ from data.dataset import build_datasets
 from utils.metrics import accuracy, compute_fall_detection_metrics, print_metrics
 
 
-def train_one_epoch(model, loader, optimizer, criterion, device, teacher_name=""):
+def train_one_epoch(model, loader, optimizer, criterion, device, teacher_name="", scaler=None):
     model.train()
     total_loss, total_acc, n = 0, 0, 0
     for batch in loader:
-        x = batch["video"].to(device)  # (B, T, 3, H, W)
-        y = batch["label"].to(device)
+        x = batch["video"].to(device, non_blocking=True)  # (B, T, 3, H, W)
+        y = batch["label"].to(device, non_blocking=True)
         optimizer.zero_grad()
-        out = model(x)
-        if "modal_logits" in out:
-            # MViT: 主任务 + 模态对抗
-            loss = criterion(out["logits"], y)
+        # AMP 混合精度
+        with autocast():
+            out = model(x)
+            if "modal_logits" in out:
+                # MViT: 主任务 + 模态对抗
+                loss = criterion(out["logits"], y)
+            else:
+                loss = criterion(out["logits"], y)
+        if scaler is not None:
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
         else:
-            loss = criterion(out["logits"], y)
-        loss.backward()
-        optimizer.step()
+            loss.backward()
+            optimizer.step()
         total_loss += loss.item() * x.size(0)
         total_acc += accuracy(out["logits"], y) * x.size(0)
         n += x.size(0)
@@ -77,9 +85,10 @@ def main():
     # 数据
     train_set, val_set = build_datasets(cfg)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
-                              num_workers=cfg.num_workers)
+                              num_workers=cfg.num_workers, pin_memory=True,
+                              prefetch_factor=2)
     val_loader = DataLoader(val_set, batch_size=args.batch_size, shuffle=False,
-                           num_workers=cfg.num_workers)
+                           num_workers=cfg.num_workers, pin_memory=True)
 
     # 模型
     model = build_teacher(args.teacher, num_classes=cfg.num_classes).to(device)

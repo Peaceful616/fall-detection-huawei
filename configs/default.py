@@ -15,7 +15,7 @@ from typing import Tuple
 class Config:
     # ============ 模型 ============
     num_classes: int = 5  # Fall / Fall-like / ADL / Lying / Transition
-    input_size: Tuple[int, int] = (288, 288)  # 算法输入分辨率（省内存）
+    input_size: Tuple[int, int] = (224, 224)  # 算法输入分辨率（相机1080P→resize到224）
     seq_len: int = 16  # 时序窗口长度
 
     # YOLOv8s backbone（v3: 全解冻）
@@ -72,7 +72,7 @@ class Config:
     # ============ 数据 ============
     data_root: str = "./data/kaggle_fall"  # Kaggle Fall Video Dataset
     ir_synthesis_prob: float = 0.3
-    num_workers: int = 4
+    num_workers: int = 8  # 12 vCPU 可支撑 8 workers
 
     # ============ 长尾增强 ============
     aug_low_light_prob: float = 0.2
