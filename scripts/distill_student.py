@@ -44,11 +44,15 @@ def train_one_epoch(student, teachers, loader, optimizer, distill_loss, device, 
     for t in teachers.values():
         t.eval()
 
-    total = {"total": 0, "ce": 0, "feat": 0, "logit": 0, "rkd": 0, "modal": 0}
+    total = {"total": 0, "ce": 0, "feat": 0, "logit": 0, "rkd": 0, "modal": 0, "aux": 0}
     n = 0
     for batch in loader:
         x = batch["video"].to(device)  # (B, T, 3, H, W)
         y = batch["label"].to(device)
+        # 姿态辅助监督（仅训练期，部分 batch 无 keypoint）
+        aux_kp_gt = batch.get("aux_kp")
+        if aux_kp_gt is not None:
+            aux_kp_gt = aux_kp_gt.to(device)  # (B, T, 17, 2)
         optimizer.zero_grad()
 
         # 学生前向
@@ -61,8 +65,8 @@ def train_one_epoch(student, teachers, loader, optimizer, distill_loss, device, 
                 t_out = t(x)
                 t_outs[name] = t_out
 
-        # 蒸馏损失
-        loss_dict = distill_loss(s_out, t_outs, y)
+        # 蒸馏损失（含 aux_kp 姿态监督）
+        loss_dict = distill_loss(s_out, t_outs, y, aux_kp_gt=aux_kp_gt)
         loss_dict["total"].backward()
         optimizer.step()
 

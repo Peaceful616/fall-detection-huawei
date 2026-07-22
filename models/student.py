@@ -1,25 +1,25 @@
-"""学生模型 v2：YOLOv8s backbone（部分解冻）+ 时空 Adapter v2 + 1D-CNN 头 + 姿态辅助分支
+"""学生模型 v3：YOLOv8s backbone（全解冻）+ 时空 Adapter v3 + 1D-CNN 头 + 姿态辅助分支
 
-参数预算（升级后）：
-- backbone YOLOv8s ~9.4M（部分解冻 ~3M 可训练）
-- adapter v2 ~1.5M
-- head v2 ~0.5M
-- 姿态辅助 ~0.1M（推理期不部署）
-- 总可训练 ~5M，总参数 ~11.5M
+参数预算（v3）：
+- backbone YOLOv8s ~5.08M（全解冻，unfreeze_from=0）
+- adapter v3 ~1.68M（6 层 STResBlock + SE）
+- head v3 ~3.49M（4 层 + 残差 + c_out=1024）
+- 姿态辅助 ~0.05M（推理期不部署）
+- 总参数 ~10.30M（≤20M 硬指标达标，余量 48%）
 """
 import torch
 import torch.nn as nn
 
 from .backbones import build_backbone
 from .adapter import (
-    SpatioTemporalAdapterV2,
+    SpatioTemporalAdapterV3,
     CNN1DClassifier,
     PoseAuxHead,
 )
 
 
-class StudentNetV2(nn.Module):
-    """端到端学生模型 v2
+class StudentNetV3(nn.Module):
+    """端到端学生模型 v3
 
     输入: (B, T, 3, H, W) - 视频片段，T 帧
     输出:
@@ -32,10 +32,10 @@ class StudentNetV2(nn.Module):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
-        # backbone（部分解冻）
+        # backbone（全解冻，unfreeze_from=0）
         self.backbone = build_backbone(cfg)
-        # 时空 Adapter v2
-        self.adapter = SpatioTemporalAdapterV2(
+        # 时空 Adapter v3（6 层 STResBlock + SE）
+        self.adapter = SpatioTemporalAdapterV3(
             c_in=cfg.adapter_c_in,
             c_mid=cfg.adapter_c_mid,
             c_out=cfg.adapter_c_out,
@@ -71,7 +71,7 @@ class StudentNetV2(nn.Module):
         _, C, H, W = feat.shape
         feat = feat.view(B, T, C, H, W)
 
-        # 2. 时空 Adapter v2
+        # 2. 时空 Adapter v3
         adapter_out = self.adapter(feat)  # (B, C_out, T)
 
         # 3. 1D-CNN 分类头
@@ -120,8 +120,8 @@ class StudentNetV2(nn.Module):
 
 
 def build_student(cfg):
-    return StudentNetV2(cfg)
+    return StudentNetV3(cfg)
 
 
 # 向后兼容
-StudentNet = StudentNetV2
+StudentNet = StudentNetV3

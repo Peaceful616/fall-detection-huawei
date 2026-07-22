@@ -23,6 +23,8 @@ yolov8n.pt
 data/omnifall/
 data/urfd/
 data/videos/
+data/kaggle_fall_raw/
+data/kaggle_fall/
 data/calib_images.txt
 *.mp4
 *.avi
@@ -43,7 +45,7 @@ wandb/
 .DS_Store
 Thumbs.db
 
-# Êý¾Ý¼¯²»Èë¿â
+# ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 data/bafd6/
 data/bafd6_adapted/
 data/fall_set/

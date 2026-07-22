@@ -70,7 +70,7 @@ class Config:
     warmup_epochs: int = 5
 
     # ============ 数据 ============
-    data_root: str = "./data/omnifall"
+    data_root: str = "./data/kaggle_fall"  # Kaggle Fall Video Dataset
     ir_synthesis_prob: float = 0.3
     num_workers: int = 4
 

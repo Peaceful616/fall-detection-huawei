@@ -1,7 +1,12 @@
-"""YOLOv8 backbone 封装：支持 YOLOv8n/s + 部分解冻末段
+"""YOLOv8 backbone 封装：支持 YOLOv8n/s/m 等 + 可配置冻结策略
 
 YOLOv8n backbone：~1.27M 参数（COCO 检测预训练）
-YOLOv8s backbone：~9.4M 参数（COCO 检测预训练）
+YOLOv8s backbone：~5.08M 参数（COCO 检测预训练）
+
+冻结策略（由 cfg.backbone_unfreeze_from 驱动）：
+- v1: 全冻结（unfreeze_from=10，不实际用）
+- v2: 部分解冻末段（unfreeze_from=7，解冻 Conv+C2f+SPPF）
+- v3: 全解冻（unfreeze_from=0，backbone 全部可训练）
 
 YOLOv8s 结构（前 10 个模块为 backbone）：
   0: Conv (stride 2)              3 → 32

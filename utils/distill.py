@@ -120,15 +120,17 @@ class DistillLoss(nn.Module):
         self.feat_align_video_swin = nn.Linear(96, cfg.adapter_c_out)
 
     def forward(self, student_out: dict, teacher_outs: dict, labels: torch.Tensor,
-               alpha_modal: float = None):
+               alpha_modal: float = None, aux_kp_gt: torch.Tensor = None):
         """
-        student_out: {logits, feat, backbone_feat}
+        student_out: {logits, feat, backbone_feat, aux_kp?}
         teacher_outs: {
             'slowfast': {logits, feat_list},
             'video_swin': {logits, feat_list},
             'mvit': {logits, feat_list, modal_logits}
         }
         labels: (B,)
+        aux_kp_gt: (B, T, 17, 2) 真值关键点（归一化坐标），仅训练期提供
+                  部分帧可能全零（CSV 未覆盖），用 mask 过滤
         """
         cfg = self.cfg
         if alpha_modal is None:
@@ -184,11 +186,27 @@ class DistillLoss(nn.Module):
                 teacher_outs["mvit"]["logits"], cfg.distill_temperature
             )
 
+        # 6. 姿态辅助监督（关键创新 4：让 backbone 学人体结构特征）
+        # 学生 aux_kp: (B, T, 17, 2)，gt: (B, T, 17, 2)
+        # CSV 部分帧未覆盖（全零），用 mask 过滤这些帧
+        loss_aux = torch.tensor(0.0, device=labels.device)
+        if (cfg.aux_kp_enabled and aux_kp_gt is not None
+                and "aux_kp" in student_out):
+            pred_kp = student_out["aux_kp"]  # (B, T, 17, 2)
+            # mask: 有效帧 = gt 非全零 (B, T) - 按帧判定
+            valid_mask = (aux_kp_gt.abs().sum(dim=(-1, -2)) > 0).float()  # (B, T)
+            if valid_mask.sum() > 0:
+                # 逐元素 MSE 仅在有效位置计算
+                diff = (pred_kp - aux_kp_gt) ** 2  # (B, T, 17, 2)
+                diff = diff.sum(dim=(-1, -2))  # (B, T)
+                loss_aux = (diff * valid_mask).sum() / (valid_mask.sum() * 17 * 2 + 1e-8)
+
         total = (loss_ce
                  + cfg.alpha_feat * loss_feat
                  + cfg.alpha_logit * loss_logit
                  + cfg.alpha_rkd * loss_rkd
-                 + alpha_modal * loss_modal)
+                 + alpha_modal * loss_modal
+                 + cfg.alpha_aux * loss_aux)
 
         return {
             "total": total,
@@ -197,4 +215,5 @@ class DistillLoss(nn.Module):
             "logit": loss_logit.item() if isinstance(loss_logit, torch.Tensor) else loss_logit,
             "rkd": loss_rkd.item() if isinstance(loss_rkd, torch.Tensor) else loss_rkd,
             "modal": loss_modal.item() if isinstance(loss_modal, torch.Tensor) else loss_modal,
+            "aux": loss_aux.item() if isinstance(loss_aux, torch.Tensor) else loss_aux,
         }

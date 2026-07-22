@@ -16,7 +16,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .backbones import build_backbone
-from .adapter import SpatioTemporalAdapterV2
+from .adapter import SpatioTemporalAdapterV3
 
 
 class DetectionHead(nn.Module):
@@ -74,7 +74,7 @@ class FallDetector(nn.Module):
         super().__init__()
         self.cfg = cfg
         self.backbone = build_backbone(cfg)
-        self.adapter = SpatioTemporalAdapterV2(
+        self.adapter = SpatioTemporalAdapterV3(
             c_in=cfg.adapter_c_in,
             c_mid=cfg.adapter_c_mid,
             c_out=cfg.adapter_c_out,

@@ -1,10 +1,11 @@
-"""时空 Adapter v2：4 层 + 残差连接
+"""时空 Adapter v3：6 层 STResBlock + 残差 + SE 通道注意力
 
-关键创新点 2：时空特征解耦 Adapter（升级版）
-- 4 层 ST Conv（原 2 层）
+关键创新点 2：时空特征解耦 Adapter（v3 升级版）
+- 6 层 ST Conv（v2: 4 层）
 - 残差连接（每 2 层一个残差）
+- SE 通道注意力（v3 新增，提升特征表达）
 - depthwise 降参数 + 加深
-- 总参数 ~1.5M（vs 原 0.06M）
+- 总参数 ~1.68M（v2: ~1.5M）
 """
 import torch
 import torch.nn as nn
@@ -93,22 +94,26 @@ class TemporalConv1D(nn.Module):
         return self.act(self.bn(self.conv(x)))
 
 
-class SpatioTemporalAdapterV2(nn.Module):
-    """时空 Adapter v2：4 层 ST Conv + 残差连接
+class SpatioTemporalAdapterV3(nn.Module):
+    """时空 Adapter v3：6 层 STResBlock + SE 通道注意力 + 残差
 
     输入: backbone 输出的单帧特征 (B, T, C, H, W)
     输出: (B, C_out, T) GAP 后的时序特征
 
-    结构（4 层 = 2 个 STResBlock）：
+    结构（depth=6 = 3 个 STResBlock，每个含 2 层 ST Conv）：
         [STResBlock 1] C_in → C_mid
             ↓
-        [STResBlock 2] C_mid → C_out
+        [STResBlock 2..] C_mid → C_mid（中间 (depth-2)/2 个）
+            ↓
+        [STResBlock last] C_mid → C_out
             ↓
         GAP over H, W → (B, C_out, T)
+            ↓
+        1D 时序卷积（注入更长时序依赖）
     """
 
-    def __init__(self, c_in: int = 256, c_mid: int = 128, c_out: int = 64,
-                 temporal_kernel: int = 5, depth: int = 4,
+    def __init__(self, c_in: int = 256, c_mid: int = 256, c_out: int = 128,
+                 temporal_kernel: int = 5, depth: int = 6,
                  residual: bool = True):
         super().__init__()
         assert depth % 2 == 0, "depth must be even (use STResBlock pairs)"
@@ -149,7 +154,7 @@ class SpatioTemporalAdapterV2(nn.Module):
 
 
 # 向后兼容
-SpatioTemporalAdapter = SpatioTemporalAdapterV2
+SpatioTemporalAdapter = SpatioTemporalAdapterV3
 
 
 class CNN1DClassifier(nn.Module):

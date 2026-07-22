@@ -19,6 +19,14 @@ from torch.utils.data import Dataset
 
 from .augment import LongTailAugment
 
+# COCO 17 关键点顺序（与 Kaggle Fall CSV 的 Keypoint 列名对齐）
+COCO_KP_NAMES = [
+    "Nose", "Left Eye", "Right Eye", "Left Ear", "Right Ear",
+    "Left Shoulder", "Right Shoulder", "Left Elbow", "Right Elbow",
+    "Left Wrist", "Right Wrist", "Left Hip", "Right Hip",
+    "Left Knee", "Right Knee", "Left Ankle", "Right Ankle",
+]
+
 LABEL_MAP = {
     "ADL": 0,
     "Fall": 1,
@@ -84,10 +92,51 @@ def load_urfd(data_root: str) -> List[Dict]:
     return samples
 
 
+def load_kaggle_fall(data_root: str, split: str = "train") -> List[Dict]:
+    """加载 Kaggle Fall Video Dataset（二分类视频 + 可选 keypoint CSV）
+
+    依赖 kaggle_fall_adapter.py 生成的 annotations_{train,val}.json：
+        data_root/
+        ├── annotations_train.json
+        ├── annotations_val.json
+        └── videos/
+            ├── fall_xxx.mp4
+            └── adl_xxx.mp4
+
+    annotation 字段：{video, label, start, end, scene, light, keypoint_csv?}
+    返回 samples 字段：{video_path, label(int), start, end, scene, light, keypoint_csv?}
+    """
+    anno_file = os.path.join(data_root, f"annotations_{split}.json")
+    videos_dir = os.path.join(data_root, "videos")
+    samples = []
+    if not os.path.exists(anno_file):
+        return samples
+    with open(anno_file, "r", encoding="utf-8") as f:
+        annos = json.load(f)
+    for a in annos:
+        vp = os.path.join(videos_dir, a["video"])
+        if not os.path.exists(vp):
+            continue
+        entry = {
+            "video_path": vp,
+            "label": LABEL_MAP.get(a.get("label", "adl"), 0),
+            "start": a.get("start", 0.0),
+            "end": a.get("end", -1.0),
+            "scene": a.get("scene", "indoor"),
+            "light": a.get("light", "normal"),
+        }
+        if "keypoint_csv" in a and a["keypoint_csv"]:
+            entry["keypoint_csv"] = a["keypoint_csv"]
+        samples.append(entry)
+    return samples
+
+
 class VideoFallDataset(Dataset):
     """视频跌倒检测数据集
 
     每次采样：从视频中随机截取 T 帧，标签为该片段的主导动作
+    若 sample 含 keypoint_csv，则同时读取对齐帧的 17 COCO 关键点，
+    输出 aux_kp: (T, 17, 2) 归一化坐标（供姿态辅助分支监督）
     """
 
     def __init__(self, cfg, samples: List[Dict], is_train: bool = True):
@@ -97,15 +146,23 @@ class VideoFallDataset(Dataset):
         self.augment = LongTailAugment(cfg) if is_train else None
         self.seq_len = cfg.seq_len
         self.input_size = cfg.input_size
+        self.aux_kp_enabled = getattr(cfg, "aux_kp_enabled", False)
 
     def __len__(self):
         return len(self.samples)
 
-    def _load_video_frames(self, video_path: str, start: float, end: float) -> np.ndarray:
-        """读取视频片段，返回 (T, H, W, 3) RGB in [0, 255]"""
+    def _load_video_frames(self, video_path: str, start: float, end: float):
+        """读取视频片段
+
+        返回 (frames (T,H,W,3) RGB in [0,255], start_frame, (orig_w, orig_h))
+        start_frame 用于对齐 keypoint CSV
+        orig_w/orig_h 为原视频分辨率，用于 keypoint 归一化
+        """
         cap = cv2.VideoCapture(video_path)
         fps = cap.get(cv2.CAP_PROP_FPS) or 30
         total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        orig_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) or self.input_size[0]
+        orig_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) or self.input_size[1]
         # 截取范围
         start_frame = int(start * fps)
         end_frame = int(end * fps) if end > 0 else total
@@ -130,11 +187,56 @@ class VideoFallDataset(Dataset):
             frame = cv2.resize(frame, self.input_size)
             frames.append(frame)
         cap.release()
-        return np.stack(frames)  # (T, H, W, 3)
+        return np.stack(frames), start_frame, (orig_w, orig_h)
+
+    def _load_keypoints(self, csv_path: str, start_frame: int,
+                        orig_w: int, orig_h: int) -> np.ndarray:
+        """读取 keypoint CSV，返回 (T, 17, 2) 归一化坐标 [0,1]
+
+        CSV 格式：Frame,Keypoint,X,Y,Confidence
+        X/Y 为原视频像素坐标，按 orig_w/orig_h 归一化到 [0,1]
+        Frame 为 1-indexed 视频帧号
+        """
+        try:
+            import csv
+            with open(csv_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                # 按 Frame 分组：(0-indexed frame -> {kp_name: (x, y)})
+                frame_kp = {}
+                for row in reader:
+                    try:
+                        fi = int(row["Frame"]) - 1  # CSV 从 1 开始，转 0-indexed
+                    except (ValueError, KeyError):
+                        continue
+                    kp_name = row.get("Keypoint", "")
+                    if kp_name not in COCO_KP_NAMES:
+                        continue
+                    try:
+                        x = float(row["X"])
+                        y = float(row["Y"])
+                    except (ValueError, KeyError):
+                        continue
+                    frame_kp.setdefault(fi, {})[kp_name] = (x, y)
+
+            T = self.seq_len
+            out = np.zeros((T, 17, 2), dtype=np.float32)
+            for t in range(T):
+                fi = start_frame + t
+                kps = frame_kp.get(fi, {})
+                for k, name in enumerate(COCO_KP_NAMES):
+                    if name in kps:
+                        x, y = kps[name]
+                        out[t, k, 0] = x / max(orig_w, 1)
+                        out[t, k, 1] = y / max(orig_h, 1)
+            return out
+        except Exception:
+            # keypoint 读取失败不影响主任务，返回全零
+            return np.zeros((self.seq_len, 17, 2), dtype=np.float32)
 
     def __getitem__(self, idx):
         s = self.samples[idx]
-        frames = self._load_video_frames(s["video_path"], s["start"], s["end"])
+        frames, start_frame, (orig_w, orig_h) = self._load_video_frames(
+            s["video_path"], s["start"], s["end"])
         # to tensor (T, 3, H, W) in [0, 1]
         x = torch.from_numpy(frames).permute(0, 3, 1, 2).float() / 255.0
         # 长尾增强
@@ -144,7 +246,8 @@ class VideoFallDataset(Dataset):
         mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
         std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
         x = (x - mean) / std
-        return {
+
+        out = {
             "video": x,           # (T, 3, H, W)
             "label": s["label"],
             "video_path": s["video_path"],
@@ -152,18 +255,37 @@ class VideoFallDataset(Dataset):
             "light": s.get("light", "normal"),
         }
 
+        # 姿态辅助分支监督信号（仅训练期）
+        if self.is_train and self.aux_kp_enabled and "keypoint_csv" in s:
+            kp = self._load_keypoints(s["keypoint_csv"], start_frame, orig_w, orig_h)
+            out["aux_kp"] = torch.from_numpy(kp)  # (T, 17, 2)
+        return out
+
 
 def build_datasets(cfg):
-    """构建训练/验证数据集"""
+    """构建训练/验证数据集
+
+    优先用 Kaggle Fall Video Dataset（已划分好的 annotations_train/val.json），
+    回退到 OmniFall/URFD 原逻辑
+    """
+    kaggle_train = os.path.join(cfg.data_root, "annotations_train.json")
+    if os.path.exists(kaggle_train):
+        # Kaggle Fall 已划分
+        train_samples = load_kaggle_fall(cfg.data_root, split="train")
+        val_samples = load_kaggle_fall(cfg.data_root, split="val")
+        if train_samples and val_samples:
+            train_set = VideoFallDataset(cfg, train_samples, is_train=True)
+            val_set = VideoFallDataset(cfg, val_samples, is_train=False)
+            print(f"[Dataset] Kaggle Fall: train={len(train_set)}, val={len(val_set)}")
+            return train_set, val_set
+
+    # 回退：OmniFall + URFD 混合后随机划分
     all_samples = []
-    # OmniFall
     omnifall_samples = load_omnifall(cfg.data_root)
     all_samples.extend(omnifall_samples)
-    # URFD（如有）
     urfd_root = os.path.join(os.path.dirname(cfg.data_root), "urfd")
     if os.path.isdir(urfd_root):
         all_samples.extend(load_urfd(urfd_root))
-    # 划分
     np.random.seed(42)
     np.random.shuffle(all_samples)
     n_total = len(all_samples)
@@ -172,5 +294,5 @@ def build_datasets(cfg):
     val_samples = all_samples[n_train:]
     train_set = VideoFallDataset(cfg, train_samples, is_train=True)
     val_set = VideoFallDataset(cfg, val_samples, is_train=False)
-    print(f"[Dataset] train={len(train_set)}, val={len(val_set)}")
+    print(f"[Dataset] OmniFall/URFD fallback: train={len(train_set)}, val={len(val_set)}")
     return train_set, val_set
