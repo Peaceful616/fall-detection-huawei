@@ -1,51 +1,47 @@
 """OmniFall 数据集适配器
 
 数据集来源：HuggingFace simplexsigil2/omnifall
-- 16 类活动 taxonomy
+- 16 类活动 taxonomy（core 0-9 + extended 10-15）
 - 三大组件：OF-Staged (8 公开 lab 数据集) / OF-ItW (OOPS 真实意外) / OF-Syn (12000 合成视频)
 - 70+ 配置，关键：
     of-sta-cs          8 staged 数据集 cross-subject 划分
     of-sta-cv          cross-view 划分
     of-sta-to-all-cs   训练 staged 测试 staged+itw+syn（cross-domain 泛化）
+    of-syn             12000 合成视频，random 80/10/10
 
-样本字段（README 示例）：
-    {'path': ..., 'label': 1, 'start': 0.0, 'end': 2.5, ...}
+样本字段（probe 确认，与 STRUCTURE.md 一致）：
+    {'path': 'adl/HopS6', 'label': 9, 'start': 0.0, 'end': 8.1,
+     'subject': 6, 'cam': 1, 'dataset': 'caucafall'}
+
+    path: 相对路径（dataset-specific root），逻辑 ID，不是绝对路径！
+    label: 0-15 int（core 0-9，extended 10-15）
+    subject: 受试者 id（-1 for ItW/Syn）
+    cam: 摄像头视角 id（-1 for ItW/Syn）
+    dataset: 子数据集名
+
+10 类 core taxonomy（LABELS.md 确认）：
+    0 walk, 1 fall, 2 fallen, 3 sit_down, 4 sitting,
+    5 lie_down, 6 lying, 7 stand_up, 8 standing, 9 other
 
 本适配器：
 1. 用 datasets.load_dataset 拉取指定 config
-2. 把 16 类 label 映射到本项目的 5 类（Fall / Fall-like / ADL / Lying / Transition）
+2. 把 10/16 类 label 映射到本项目的 5 类
 3. 导出 annotations_{train,val,test}.json 到 out_dir/annotations/
    字段与 kaggle_fall_adapter 对齐：
-   {video_path(绝对), label(int 0-4), start, end, scene, light,
-    source(子数据集名), is_ir(布尔), original_label(int 0-15)}
-4. 视频路径直接用 OmniFall 返回的 path 字段（已是绝对路径或 HF cache 路径）
+   {video_path(path 字段原值), label(int 0-4), original_label(int 0-15),
+    start, end, subject, cam, dataset, is_ir(布尔)}
+4. 视频文件本身需要另外下载：
+   - OF-Syn: data_files/omnifall-synthetic_av1.tar（单一 tar，最简单）
+   - OF-Staged: 需要各原始子数据集 + omnifall 包做 path→文件映射（复杂）
+   - OF-ItW: prepare_oops_videos.py 提取 OOPS 视频
 
-注意：本适配器只导出标注，不解码视频。视频读取仍走 VideoFallDataset
-（cv2.VideoCapture）或先用 predecode_videos.py 预解码再用 Fast 版本。
+视频路径字段（video_path）在 annotations 里存的是 OmniFall 的 path 原值，
+训练时需要通过 VideoFallDataset 的 video_path 解析逻辑找到真实文件。
+对 OF-Syn，video_path = tar 内文件名（去掉 .mp4）。
 
 用法：
     python data/omnifall_adapter.py --config of-sta-cs --out ./data/omnifall
-
-16 类 taxonomy 映射策略（待 probe 确认 label 定义后调整）：
-OmniFall 16 类（基于论文 arXiv:2505.19889 推断）：
-    0  Fall                    -> 1 (Fall)
-    1  Fall-like (stumble)     -> 2 (Fall-like)
-    2  Lying                   -> 3 (Lying)
-    3  Lying-like (floor)      -> 3 (Lying)
-    4  Sit                     -> 0 (ADL)
-    5  Sit-like (chair)        -> 0 (ADL)
-    6  Bend                    -> 2 (Fall-like，弯腰易误判)
-    7  Squat                    -> 2 (Fall-like，下蹲易误判)
-    8  Walk                     -> 0 (ADL)
-    9  Stand/Stand-up           -> 4 (Transition)
-    10 Lie down (intentional)  -> 3 (Lying)
-    11 Sit down                -> 4 (Transition)
-    12 Stand up                -> 4 (Transition)
-    13 Crouch                  -> 2 (Fall-like)
-    14 Kneel                    -> 0 (ADL)
-    15 Other ADL                -> 0 (ADL)
-
-以上映射是初始猜测，probe 跑完拿到 LABELS.md 真实定义后会修正。
+    python data/omnifall_adapter.py --config of-syn --out ./data/omnifall_syn
 """
 import argparse
 import os
@@ -54,32 +50,47 @@ from collections import Counter
 from pathlib import Path
 
 
-# 16 类 -> 5 类映射（初始版本，待 probe 修正）
+# 16 类 -> 5 类映射（LABELS.md 确认的 10 core + 6 extended）
+# OmniFall 16:  0 walk, 1 fall, 2 fallen, 3 sit_down, 4 sitting,
+#               5 lie_down, 6 lying, 7 stand_up, 8 standing, 9 other,
+#               10 kneel_down, 11 kneeling, 12 squat_down, 13 squatting,
+#               14 crawl, 15 jump
+# 本项目 5 类: 0 ADL, 1 Fall, 2 Fall-like, 3 Lying, 4 Transition
 OMNIFALL16_TO_5 = {
-    0: 1,    # Fall -> Fall
-    1: 2,    # Fall-like (stumble) -> Fall-like
-    2: 3,    # Lying -> Lying
-    3: 3,    # Lying-like -> Lying
-    4: 0,    # Sit -> ADL
-    5: 0,    # Sit-like -> ADL
-    6: 2,    # Bend -> Fall-like
-    7: 2,    # Squat -> Fall-like
-    8: 0,    # Walk -> ADL
-    9: 4,    # Stand -> Transition
-    10: 3,   # Lie down -> Lying
-    11: 4,   # Sit down -> Transition
-    12: 4,   # Stand up -> Transition
-    13: 2,   # Crouch -> Fall-like
-    14: 0,   # Kneel -> ADL
-    15: 0,   # Other ADL -> ADL
+    0: 0,    # walk -> ADL
+    1: 1,    # fall -> Fall
+    2: 1,    # fallen -> Fall（跌倒后地面状态，题目要识别）
+    3: 2,    # sit_down -> Fall-like（姿态下移，易误判）
+    4: 0,    # sitting -> ADL
+    5: 2,    # lie_down -> Fall-like（主动躺下，姿态下移易误判）
+    6: 3,    # lying -> Lying
+    7: 4,    # stand_up -> Transition
+    8: 0,    # standing -> ADL
+    9: 0,    # other -> ADL（兜底）
+    10: 2,   # kneel_down -> Fall-like（屈膝下移）
+    11: 0,   # kneeling -> ADL（静态跪姿，日常）
+    12: 2,   # squat_down -> Fall-like（下蹲）
+    13: 0,   # squatting -> ADL（静态蹲姿，日常）
+    14: 0,   # crawl -> ADL（爬行，日常）
+    15: 0,   # jump -> ADL（跳跃，日常）
 }
 
 # 5 类名（与 dataset.py LABEL_MAP 对齐）
 CLASS5_NAMES = ["ADL", "Fall", "Fall-like", "Lying", "Transition"]
 
-# 推断红外/夜视的子数据集（待 probe 确认）
-# UP-Fall 原数据集含红外 + 深度，CMDFall 多视角可能含红外
-IR_DATASETS_HINT = {"up-fall", "upfall", "cmdfall", "mcfd"}
+# OmniFall 16 类名（debug 用）
+OMNIFALL16_NAMES = {
+    0: "walk", 1: "fall", 2: "fallen", 3: "sit_down", 4: "sitting",
+    5: "lie_down", 6: "lying", 7: "stand_up", 8: "standing", 9: "other",
+    10: "kneel_down", 11: "kneeling", 12: "squat_down", 13: "squatting",
+    14: "crawl", 15: "jump",
+}
+
+# 推断红外/夜视的子数据集
+# UP-Fall 原数据集含红外 + 淴度视角；但 OmniFall 的 path 不区分视角，
+# cam 字段是视角 id，要靠 cam 值匹配红外视角（需要各子数据集原始文档确认）
+# 保守策略：暂不标 IR，等拿到 UP-Fall 原始视角定义后再细化
+IR_DATASETS_HINT = {"up_fall"}
 
 
 def adapt_omnifall(config: str = "of-sta-cs", out_dir: str = "./data/omnifall"):
@@ -108,39 +119,13 @@ def adapt_omnifall(config: str = "of-sta-cs", out_dir: str = "./data/omnifall"):
         cols = d.column_names
         print(f"\n=== {split}: n={len(d)} columns={cols} ===")
 
-        # 推断字段名（OmniFall 可能用 path / video / video_path）
-        path_key = None
-        for cand in ["path", "video", "video_path", "file"]:
-            if cand in cols:
-                path_key = cand
-                break
-        if path_key is None:
-            print(f"[FAIL] no video path field in {cols}, skip {split}")
+        # OmniFall 字段固定为 path/label/start/end/subject/cam/dataset
+        # (+ of-syn 扩展列，这里只取 core 7 列)
+        required = ["path", "label", "start", "end", "dataset"]
+        missing = [c for c in required if c not in cols]
+        if missing:
+            print(f"[FAIL] missing required columns {missing} in {cols}, skip {split}")
             continue
-
-        # label 字段
-        label_key = None
-        for cand in ["label", "labels", "activity", "class"]:
-            if cand in cols:
-                label_key = cand
-                break
-        if label_key is None:
-            print(f"[FAIL] no label field in {cols}, skip {split}")
-            continue
-
-        # 子数据集字段（用于 IR 推断）
-        src_key = None
-        for cand in ["dataset", "source", "src", "db", "origin"]:
-            if cand in cols:
-                src_key = cand
-                break
-
-        # 视角/模态字段
-        view_key = None
-        for cand in ["view", "modality", "sensor", "camera"]:
-            if cand in cols:
-                view_key = cand
-                break
 
         samples = []
         label16_dist = Counter()
@@ -149,47 +134,49 @@ def adapt_omnifall(config: str = "of-sta-cs", out_dir: str = "./data/omnifall"):
         ir_count = 0
 
         for s in d:
-            vpath = s[path_key]
-            if not vpath or not os.path.exists(vpath):
-                # OmniFall path 可能是 HF cache 路径，video=True 才下载
-                # 这里只存路径，读取时再决定
-                pass
-            label16 = int(s[label_key])
+            # path 是逻辑 ID（如 'adl/HopS6'），不是绝对路径
+            # 真实视频文件需要另外解析：
+            #   OF-Syn: tar 内文件名（path + '.mp4'）
+            #   OF-Staged: 各子数据集原始视频 + omnifall 包做 path→文件映射
+            logical_path = str(s["path"])
+            label16 = int(s["label"])
             label5 = OMNIFALL16_TO_5.get(label16, 0)
 
-            src_name = s.get(src_key, "") if src_key else ""
-            view_name = s.get(view_key, "") if view_key else ""
+            dataset_name = str(s.get("dataset", ""))
+            subject = int(s.get("subject", -1)) if s.get("subject") is not None else -1
+            cam = int(s.get("cam", -1)) if s.get("cam") is not None else -1
 
-            # 红外推断：子数据集名 + 视角名含 ir/thermal/night
+            # 红外推断：保守策略，UP-Fall 的 cam 值 5/6 对应红外+深度
+            # （UP-Fall 原论文：cam1=RGB, cam2=RGB, cam3=depth, cam4=depth,
+            #   cam5=infrared, cam6=infrared）
+            # 但 OmniFall 是否保留红外视角未确认，先标记待后续验证
             is_ir = False
-            src_lower = str(src_name).lower()
-            view_lower = str(view_name).lower()
-            if any(k in src_lower for k in IR_DATASETS_HINT):
-                # UP-Fall 有红外视角，但不是所有视角都 IR，需要 view 字段细化
-                # 保守：若 view 含 ir/thermal/night 才判为红外
-                if any(k in view_lower for k in ["ir", "thermal", "night", "infrared"]):
+            if dataset_name.lower() in IR_DATASETS_HINT:
+                # UP-Fall cam 5/6 可能是红外，需要实际验证
+                if cam in (5, 6):
                     is_ir = True
-            if any(k in view_lower for k in ["ir", "thermal", "night", "infrared"]):
-                is_ir = True
             if is_ir:
                 ir_count += 1
 
             samples.append({
-                "video_path": str(vpath),
+                # video_path 存逻辑 ID，VideoFallDataset 读取时需解析为真实文件
+                "video_path": logical_path,
                 "label": label5,
                 "original_label": label16,
+                "original_label_name": OMNIFALL16_NAMES.get(label16, "unknown"),
                 "start": float(s.get("start", 0.0)),
                 "end": float(s.get("end", -1.0)),
-                "scene": str(s.get("scene", "indoor")),
-                "light": "infrared" if is_ir else str(s.get("light", "normal")),
-                "source": str(src_name),
-                "view": str(view_name),
+                "subject": subject,
+                "cam": cam,
+                "dataset": dataset_name,
+                "scene": "indoor",  # OmniFall 不区分场景，默认 indoor
+                "light": "infrared" if is_ir else "normal",
                 "is_ir": is_ir,
             })
             label16_dist[label16] += 1
             label5_dist[label5] += 1
-            if src_name:
-                src_dist[src_name] += 1
+            if dataset_name:
+                src_dist[dataset_name] += 1
 
         # 写 annotations
         out_file = anno_dir / f"annotations_{split}.json"
@@ -216,8 +203,10 @@ def adapt_omnifall(config: str = "of-sta-cs", out_dir: str = "./data/omnifall"):
         json.dump(summary, f, ensure_ascii=False, indent=2)
     print(f"\n[OK] summary -> {summary_path}")
     print(f"\n[Done] Annotations under {anno_dir}")
-    print(f"[Next] 视频本体需要 omnifall.load(config, video=True) 下载，"
-          f"或对每个 video_path 用 predecode_videos.py 预解码")
+    print(f"[Next] 视频本体需另外下载：")
+    print(f"  OF-Syn: 下载 data_files/omnifall-synthetic_av1.tar 后解压")
+    print(f"  OF-Staged: 需各原始子数据集 + omnifall 包做 path->file 映射")
+    print(f"  OF-ItW: 用 prepare_oops_videos.py 提取 OOPS 视频")
     return True
 
 
