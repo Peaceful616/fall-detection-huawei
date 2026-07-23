@@ -40,18 +40,47 @@ LABEL_MAP = {
 }
 
 
-def load_omnifall(data_root: str) -> List[Dict]:
-    """加载 OmniFall 数据集（HuggingFace 上的 simplexsigil2/omnifall）
+def load_omnifall(data_root: str, split: str = "train") -> List[Dict]:
+    """加载 OmniFall 数据集（HuggingFace simplexsigil2/omnifall）
 
-    假定目录结构：
+    优先读取由 data/omnifall_adapter.py 导出的 annotations：
         data_root/
-          ├── annotations.json   # [{video: "xxx.mp4", label: "fall", start: 0.5, end: 3.2}, ...]
-          └── videos/
-                ├── 001.mp4
-                └── ...
+          └── annotations/
+              ├── annotations_train.json
+              ├── annotations_val.json
+              ├── annotations_test.json
+              └── summary.json
 
-    实际下载后如格式不同，可在此处适配。
+    每条样本字段：{video_path(绝对), label(int 0-4), original_label,
+                   start, end, scene, light, source, view, is_ir}
+    直接透传给 VideoFallDataset / VideoFallDatasetFast。
+
+    若 annotations 不存在，回退到旧的 annotations.json + videos/ 假设（占位）。
     """
+    # 新路径：annotations/annotations_{split}.json
+    anno_file = os.path.join(data_root, "annotations", f"annotations_{split}.json")
+    if os.path.exists(anno_file):
+        with open(anno_file, "r", encoding="utf-8") as f:
+            annos = json.load(f)
+        # 过滤掉 video_path 不存在的（OmniFall path 可能需 video=True 才下载）
+        # 这里保留所有样本，让 Dataset 在 __getitem__ 时处理缺失
+        return [
+            {
+                "video_path": a["video_path"],
+                "label": int(a.get("label", 0)),
+                "start": float(a.get("start", 0.0)),
+                "end": float(a.get("end", -1.0)),
+                "scene": a.get("scene", "indoor"),
+                "light": a.get("light", "normal"),
+                # 额外字段供 IR 增强等使用
+                "source": a.get("source", ""),
+                "view": a.get("view", ""),
+                "is_ir": bool(a.get("is_ir", False)),
+            }
+            for a in annos
+        ]
+
+    # 回退：旧的占位格式（annotations.json + videos/）
     anno_file = os.path.join(data_root, "annotations.json")
     videos_dir = os.path.join(data_root, "videos")
     samples = []
@@ -417,7 +446,26 @@ def build_datasets(cfg):
             print(f"[Dataset] Kaggle Fall: train={len(train_set)}, val={len(val_set)}")
             return train_set, val_set
 
-    # 回退：OmniFall + URFD
+    # 回退：OmniFall（优先 annotations/ 目录，由 omnifall_adapter.py 生成）
+    omnifall_anno_dir = os.path.join(cfg.data_root, "annotations")
+    if os.path.isdir(omnifall_anno_dir):
+        train_samples = load_omnifall(cfg.data_root, split="train")
+        val_samples = load_omnifall(cfg.data_root, split="val") or \
+                      load_omnifall(cfg.data_root, split="test")
+        if train_samples and val_samples:
+            if use_fast:
+                DatasetClass = VideoFallDatasetFast
+                print(f"[Dataset] Using fast mode (pre-decoded frames from {frames_dir})")
+            else:
+                DatasetClass = VideoFallDataset
+                print(f"[Dataset] Using slow mode (cv2.VideoCapture). "
+                      f"Run: python scripts/predecode_videos.py --data_root {cfg.data_root}")
+            train_set = DatasetClass(cfg, train_samples, is_train=True)
+            val_set = DatasetClass(cfg, val_samples, is_train=False)
+            print(f"[Dataset] OmniFall: train={len(train_set)}, val={len(val_set)}")
+            return train_set, val_set
+
+    # 旧回退：OmniFall 占位 annotations.json + URFD
     all_samples = []
     omnifall_samples = load_omnifall(cfg.data_root)
     all_samples.extend(omnifall_samples)
