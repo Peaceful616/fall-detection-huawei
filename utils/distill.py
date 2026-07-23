@@ -146,7 +146,7 @@ class DistillLoss(nn.Module):
             s_feat_5d = s_feat.permute(0, 2, 1, 3, 4).contiguous()  # (B, C, T, H, W)
             s_feat_vec = F.adaptive_avg_pool3d(s_feat_5d, 1).flatten(1)  # (B, C)
             # 通道对齐
-            if self.feat_align_slowfast is None or s_feat_vec.size(1) != self.feat_align_slowfast.out_channels:
+            if self.feat_align_slowfast is None or s_feat_vec.size(1) != self.feat_align_slowfast.out_features:
                 self.feat_align_slowfast = nn.Linear(t_feat.size(1), s_feat_vec.size(1)).to(labels.device)
             t_feat_aligned = self.feat_align_slowfast(t_feat)
             loss_feat = loss_feat + F.mse_loss(s_feat_vec, t_feat_aligned)
@@ -172,7 +172,7 @@ class DistillLoss(nn.Module):
             s_feat = student_out["feat"]  # (B, C, T)
             s_feat_flat = s_feat.mean(dim=2)  # (B, C)
             t_feat = teacher_outs["video_swin"]["feat_list"][0]  # (B, C_t)
-            if self.feat_align_video_swin is None or s_feat_flat.size(1) != self.feat_align_video_swin.out_channels:
+            if self.feat_align_video_swin is None or s_feat_flat.size(1) != self.feat_align_video_swin.out_features:
                 self.feat_align_video_swin = nn.Linear(t_feat.size(1), s_feat_flat.size(1)).to(labels.device)
             t_feat_aligned = self.feat_align_video_swin(t_feat)
             loss_rkd = rkd_loss(s_feat_flat, t_feat_aligned)
