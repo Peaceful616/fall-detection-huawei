@@ -140,20 +140,9 @@ class DistillLoss(nn.Module):
         loss_ce = self.ce(student_out["logits"], labels)
 
         # 2. 特征蒸馏（AT + L2）
+        # 当前官方预训练教师只返回 logits，无法直接提取中间层 3D 特征，
+        # 故暂时禁用特征蒸馏，后续可通过替换 backbone 获取中间特征。
         loss_feat = torch.tensor(0.0, device=labels.device)
-        if "slowfast" in teacher_outs:
-            t_feat = teacher_outs["slowfast"]["feat_list"][0]  # (B, 256, T/2, H/4, W/4)
-            s_feat = student_out["backbone_feat"]  # (B, T, C, H, W)
-            # 学生特征：转成 (B, C, T, H, W) 形式
-            s_feat_5d = s_feat.permute(0, 2, 1, 3, 4).contiguous()  # (B, C, T, H, W)
-            t_feat_aligned = self.feat_align_slowfast(t_feat)  # (B, 32, T/2, H/4, W/4)
-            # 空间 + 时序尺寸对齐
-            if s_feat_5d.shape[2:] != t_feat_aligned.shape[2:]:
-                t_feat_aligned = F.interpolate(
-                    t_feat_aligned, size=s_feat_5d.shape[2:], mode='trilinear', align_corners=False
-                )
-            loss_feat = loss_feat + feat_l2_loss(s_feat_5d, t_feat_aligned)
-            loss_feat = loss_feat + attn_transfer_loss(s_feat_5d, t_feat_aligned)
 
         # 3. logit 蒸馏
         loss_logit = torch.tensor(0.0, device=labels.device)
@@ -170,13 +159,9 @@ class DistillLoss(nn.Module):
             )
 
         # 4. 关系蒸馏
+        # 当前官方预训练教师只返回 logits，无法直接提取特征向量，
+        # 故暂时禁用关系蒸馏。
         loss_rkd = torch.tensor(0.0, device=labels.device)
-        if "video_swin" in teacher_outs:
-            s_feat = student_out["feat"]  # (B, C, T)
-            s_feat_flat = s_feat.mean(dim=2)  # (B, C)
-            t_feat = teacher_outs["video_swin"]["feat_list"][0]  # (B, 96)
-            t_feat_aligned = self.feat_align_video_swin(t_feat)
-            loss_rkd = rkd_loss(s_feat_flat, t_feat_aligned)
 
         # 5. 跨模态蒸馏
         loss_modal = torch.tensor(0.0, device=labels.device)
