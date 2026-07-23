@@ -99,6 +99,20 @@ This addresses the failure of the original lightweight model to converge on the 
 - `pytorchvideo>=0.1.5`
 - `Pillow>=9.0`
 
+### 7. Teacher Training Results
+
+Three teacher models were trained on the Kaggle Fall binary classification dataset (Fall / No Fall):
+
+| Teacher | Best F1 | Best Epoch Range | Precision | Recall | Checkpoint |
+|---|---|---|---|---|---|
+| SlowFast (R50) | 1.0000 | 36-40 | 1.0000 | 1.0000 | `checkpoints/teacher_slowfast_best.pt` |
+| VideoSwin (3D-T) | 0.9945 | 26-30 | 0.9906 | 0.9984 | `checkpoints/teacher_video_swin_best.pt` |
+| MViT (v2-S) | 1.0000 | 21-25 | 1.0000 | 1.0000 | `checkpoints/teacher_mvit_best.pt` |
+
+Validation set size: 1398 samples (631 fall samples).
+
+Based on these results, 50 epochs is sufficient; all teachers converge well before 50 epochs.
+
 ### Usage
 
 ```bash
@@ -108,6 +122,8 @@ python scripts/predecode_videos.py --data_root ./data/kaggle_fall
 # Step 2: Install new dependency
 pip install pytorchvideo Pillow
 
-# Step 3: Train SlowFast (reduce batch size due to larger model)
-python scripts/train_teachers.py --teacher slowfast --batch_size 4 --epochs 100 --lr 1e-4
+# Step 3: Train teachers (50 epochs is sufficient)
+python scripts/train_teachers.py --teacher slowfast --batch_size 8 --epochs 50 --lr 1e-4
+python scripts/train_teachers.py --teacher video_swin --batch_size 4 --epochs 50 --lr 1e-4
+python scripts/train_teachers.py --teacher mvit --batch_size 4 --epochs 50 --lr 1e-4
 ```
