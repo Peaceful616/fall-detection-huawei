@@ -94,14 +94,18 @@ class VideoSwinTeacher(nn.Module):
     def forward(self, x):
         # x: (B, T, 3, H, W) → (B, 3, T, H, W)
         x = x.permute(0, 2, 1, 3, 4).contiguous()
-        # torchvision swin3d_t 结构：features + head
-        # features 输出 (B, C, T', H', W')，然后 head 内部做 permute/avgpool/flatten/linear
-        feat = self.model.features(x)  # (B, C, T', H', W')
+        # torchvision swin3d_t 官方 forward 顺序：
+        # patch_embed → pos_drop → features → norm → permute → avgpool → flatten → head
+        # features 不含 patch_embed，直接调 features 会因维度不匹配报错。
+        x = self.model.patch_embed(x)
+        x = self.model.pos_drop(x)
+        x = self.model.features(x)        # (B, _T, _H, _W, C)
+        x = self.model.norm(x)
+        # 取全局特征：先转到 (B, C, T', H', W') 再做 3D 平均池化
+        feat = x.permute(0, 4, 1, 2, 3)   # (B, C, _T, _H, _W)
         feat_vec = F.adaptive_avg_pool3d(feat, 1).flatten(1)  # (B, C)
 
-        logits = self.model.head(self.model.norm(feat.permute(0, 4, 2, 3, 1)).permute(0, 4, 1, 2, 3))
-        # 上面的 head 调用较复杂，直接复用原 forward 逻辑更稳
-        logits = self.model(x)
+        logits = self.model.head(feat_vec)
         return {"logits": logits, "feat_list": [feat_vec]}
 
 
@@ -124,20 +128,34 @@ class MViTTeacher(nn.Module):
         super().__init__()
         from torchvision.models.video import mvit_v2_s, MViT_V2_S_Weights
         self.model = mvit_v2_s(weights=MViT_V2_S_Weights.KINETICS400_V1)
-        self.head_in_features = self.model.head[1].in_features
-        self.model.head[1] = nn.Linear(self.head_in_features, num_classes)
+        # torchvision 不同版本 head 结构不同：
+        #   新版 head = nn.Sequential(Dropout, Linear)，Linear 在 idx 1
+        #   旧版 head = nn.Linear
+        head = self.model.head
+        if isinstance(head, nn.Sequential):
+            self.head_in_features = head[1].in_features
+            head[1] = nn.Linear(self.head_in_features, num_classes)
+        else:  # nn.Linear
+            self.head_in_features = head.in_features
+            self.model.head = nn.Linear(self.head_in_features, num_classes)
         self.num_classes = num_classes
         self.num_modal = num_modal
+        # 用 hook 在 norm 之后捕获 token 序列作为特征，避免依赖内部属性名
+        self._feat_buffer = {}
+
+        def _hook(module, inp, out):
+            self._feat_buffer["feat"] = out
+
+        self.model.norm.register_forward_hook(_hook)
 
     def forward(self, x, alpha=1.0):
         # x: (B, T, 3, H, W) → (B, 3, T, H, W)
         x = x.permute(0, 2, 1, 3, 4).contiguous()
-        # MViT 的 features 输出经过 encoder + layernorm 的 token 序列
-        # 形状通常为 (B, num_tokens, embed_dim)
-        feat = self.model.features(x)  # (B, N, C)
-        feat_vec = feat.mean(dim=1)  # (B, C) 全局平均
-
+        # 官方 forward 内部完成 conv_proj → pos_encoding → blocks → norm → cls_token → head
+        # hook 在 norm 上捕获 token 序列 (B, N, C)
         logits = self.model(x)
+        feat = self._feat_buffer["feat"]  # (B, N, C)
+        feat_vec = feat.mean(dim=1)      # (B, C) 全局平均
         modal_logits = torch.zeros((x.size(0), self.num_modal), device=x.device)
         return {"logits": logits, "feat_list": [feat_vec], "modal_logits": modal_logits}
 
