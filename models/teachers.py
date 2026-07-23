@@ -51,12 +51,19 @@ class SlowFastTeacher(nn.Module):
         fast = x
 
         # 前向传播到 body blocks（去掉最后的 pool/proj）
-        feat = self.body_blocks([slow, fast])  # list[slow_feat, fast_feat]
+        # pytorchvideo Net.forward 即逐块前向，输入 list 会沿 block 链流转，
+        # 直到 PoolConcatPathway 把两条 pathway 合并为单 tensor。
+        feat = [slow, fast]
+        for block in self.body_blocks:
+            feat = block(feat)
         # 对 slow 和 fast 做全局平均池化并拼接，作为整体特征
-        pooled = []
-        for f in feat:
-            pooled.append(F.adaptive_avg_pool3d(f, 1).flatten(1))
-        feat_vec = torch.cat(pooled, dim=1)  # (B, proj_in_features)
+        # 注意：经过 PoolConcatPathway 后 feat 已是单 tensor (B, C, T', H', W')，
+        # 此时直接池化即可（feat_list 仅含一个 tensor）。
+        if isinstance(feat, (list, tuple)):
+            pooled = [F.adaptive_avg_pool3d(f, 1).flatten(1) for f in feat]
+            feat_vec = torch.cat(pooled, dim=1)  # (B, proj_in_features)
+        else:
+            feat_vec = F.adaptive_avg_pool3d(feat, 1).flatten(1)
 
         logits = self.final_block(feat)  # 经过 pool + dropout + proj
         return {"logits": logits, "feat_list": [feat_vec]}
