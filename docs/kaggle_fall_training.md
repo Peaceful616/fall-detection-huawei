@@ -145,17 +145,17 @@ All four fixes are committed on `main`:
 
 ## 4. Results
 
-### 4.1 Validation metrics (best, ~epoch 25-30)
+### 4.1 Validation metrics (best, epoch 45-50)
 
 ```
 ===== Student Validation =====
-Precision: 0.9968
-Recall:    0.9984
-F1-Score:  0.9976
-TP=630 FP=2 FN=1
+Precision: 1.0000
+Recall:    1.0000
+F1-Score:  1.0000
+TP=631 FP=0 FN=0
 ```
 
-Saved to `checkpoints/student_best.pt` (F1=0.9976).
+Saved to `checkpoints/student_best.pt` (F1=1.0000).
 
 ### 4.2 Interpretation (important)
 

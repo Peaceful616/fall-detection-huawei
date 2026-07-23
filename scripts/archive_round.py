@@ -4,7 +4,7 @@
 并生成一份 manifest.json 记录 epoch、F1、各文件 sha256、时间戳。
 
 用法（在远程执行）：
-    python scripts/archive_round.py --tag kaggle_50ep --epoch 50 --f1 0.9976
+    python scripts/archive_round.py --tag kaggle_50ep --epoch 50 --f1 1.0000
     # 或自动从 student_best.pt 读取 metadata
     python scripts/archive_round.py --tag kaggle_50ep
 
