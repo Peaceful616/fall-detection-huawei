@@ -2,6 +2,7 @@
 
 教师只在训练期使用，推理时仅部署学生网络。
 三个教师均使用官方预训练权重作为 backbone，仅在最后替换分类头。
+同时暴露中间层特征供特征蒸馏与关系蒸馏使用。
 """
 import torch
 import torch.nn as nn
@@ -19,7 +20,7 @@ class SlowFastTeacher(nn.Module):
     输入: (B, T, 3, H, W) - 视频片段
     输出:
         logits: (B, num_classes)
-        feat_list: List[Tensor] - 供特征蒸馏
+        feat_list: List[Tensor] - 供特征蒸馏，包含全局平均池化后的特征
     """
 
     def __init__(self, num_classes: int = 5):
@@ -29,9 +30,9 @@ class SlowFastTeacher(nn.Module):
             "slowfast_r50",
             pretrained=True,
         )
-        # 替换最后的分类头
-        in_features = self.model.blocks[-1].proj.in_features
-        self.model.blocks[-1].proj = nn.Linear(in_features, num_classes)
+        # 替换最后的分类头，但保留原 projection 的输入维度用于提取特征
+        self.proj_in_features = self.model.blocks[-1].proj.in_features
+        self.model.blocks[-1].proj = nn.Linear(self.proj_in_features, num_classes)
         self.num_classes = num_classes
 
     def forward(self, x):
@@ -45,10 +46,19 @@ class SlowFastTeacher(nn.Module):
         slow = x[:, :, ::4, :, :]
         # Fast pathway: 原始帧率 -> T=32
         fast = x
-        # 官方 SlowFast 输入格式是 list [slow, fast]
-        logits = self.model([slow, fast])
-        # 提取 logits 作为特征蒸馏用（后续可扩展为多层特征）
-        return {"logits": logits, "feat_list": [logits]}
+
+        # 前向传播到倒数第二个 block，提取池化前特征
+        # pytorchvideo SlowFast: blocks[-1] 包含 pool + dropout + proj
+        # blocks[:-1] 输出 slow/fast 列表，随后进入 pool/proj
+        feat = self.model[:-1]([slow, fast])  # list[slow_feat, fast_feat]
+        # 对 slow 和 fast 做全局平均池化并拼接，作为整体特征
+        pooled = []
+        for f in feat:
+            pooled.append(F.adaptive_avg_pool3d(f, 1).flatten(1))
+        feat_vec = torch.cat(pooled, dim=1)  # (B, proj_in_features)
+
+        logits = self.model[-1](feat)  # 经过 pool + dropout + proj
+        return {"logits": logits, "feat_list": [feat_vec]}
 
 
 # ============ VideoSwin 教师（Video Transformer，官方预训练权重）============
@@ -62,22 +72,29 @@ class VideoSwinTeacher(nn.Module):
     输入: (B, T, 3, H, W) - 视频片段
     输出:
         logits: (B, num_classes)
-        feat_list: List[Tensor] - 供特征蒸馏
+        feat_list: List[Tensor] - 供特征蒸馏，包含 flatten 后的特征向量
     """
 
     def __init__(self, num_classes: int = 5):
         super().__init__()
         from torchvision.models.video import swin3d_t, Swin3D_T_Weights
         self.model = swin3d_t(weights=Swin3D_T_Weights.KINETICS400_V1)
-        in_features = self.model.head.in_features
-        self.model.head = nn.Linear(in_features, num_classes)
+        self.head_in_features = self.model.head.in_features
+        self.model.head = nn.Linear(self.head_in_features, num_classes)
         self.num_classes = num_classes
 
     def forward(self, x):
         # x: (B, T, 3, H, W) → (B, 3, T, H, W)
         x = x.permute(0, 2, 1, 3, 4).contiguous()
+        # torchvision swin3d_t 结构：features + head
+        # features 输出 (B, C, T', H', W')，然后 head 内部做 permute/avgpool/flatten/linear
+        feat = self.model.features(x)  # (B, C, T', H', W')
+        feat_vec = F.adaptive_avg_pool3d(feat, 1).flatten(1)  # (B, C)
+
+        logits = self.model.head(self.model.norm(feat.permute(0, 4, 2, 3, 1)).permute(0, 4, 1, 2, 3))
+        # 上面的 head 调用较复杂，直接复用原 forward 逻辑更稳
         logits = self.model(x)
-        return {"logits": logits, "feat_list": [logits]}
+        return {"logits": logits, "feat_list": [feat_vec]}
 
 
 # ============ MViT 跨模态教师（官方预训练权重）============
@@ -99,18 +116,22 @@ class MViTTeacher(nn.Module):
         super().__init__()
         from torchvision.models.video import mvit_v2_s, MViT_V2_S_Weights
         self.model = mvit_v2_s(weights=MViT_V2_S_Weights.KINETICS400_V1)
-        in_features = self.model.head[1].in_features
-        self.model.head[1] = nn.Linear(in_features, num_classes)
+        self.head_in_features = self.model.head[1].in_features
+        self.model.head[1] = nn.Linear(self.head_in_features, num_classes)
         self.num_classes = num_classes
         self.num_modal = num_modal
 
     def forward(self, x, alpha=1.0):
         # x: (B, T, 3, H, W) → (B, 3, T, H, W)
         x = x.permute(0, 2, 1, 3, 4).contiguous()
+        # MViT 的 features 输出经过 encoder + layernorm 的 token 序列
+        # 形状通常为 (B, num_tokens, embed_dim)
+        feat = self.model.features(x)  # (B, N, C)
+        feat_vec = feat.mean(dim=1)  # (B, C) 全局平均
+
         logits = self.model(x)
-        # 保持和旧接口兼容：返回 modal_logits（不再使用模态对抗，但兼容旧代码）
         modal_logits = torch.zeros((x.size(0), self.num_modal), device=x.device)
-        return {"logits": logits, "feat_list": [logits], "modal_logits": modal_logits}
+        return {"logits": logits, "feat_list": [feat_vec], "modal_logits": modal_logits}
 
 
 # ============ 工厂函数 ============
