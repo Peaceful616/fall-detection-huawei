@@ -33,6 +33,9 @@ class SlowFastTeacher(nn.Module):
         # 替换最后的分类头，但保留原 projection 的输入维度用于提取特征
         self.proj_in_features = self.model.blocks[-1].proj.in_features
         self.model.blocks[-1].proj = nn.Linear(self.proj_in_features, num_classes)
+        # 拆出最后一层 (pool + dropout + proj) 用于后续 logits 计算
+        self.final_block = self.model.blocks[-1]
+        self.body_blocks = self.model.blocks[:-1]
         self.num_classes = num_classes
 
     def forward(self, x):
@@ -47,17 +50,15 @@ class SlowFastTeacher(nn.Module):
         # Fast pathway: 原始帧率 -> T=32
         fast = x
 
-        # 前向传播到倒数第二个 block，提取池化前特征
-        # pytorchvideo SlowFast: blocks[-1] 包含 pool + dropout + proj
-        # blocks[:-1] 输出 slow/fast 列表，随后进入 pool/proj
-        feat = self.model[:-1]([slow, fast])  # list[slow_feat, fast_feat]
+        # 前向传播到 body blocks（去掉最后的 pool/proj）
+        feat = self.body_blocks([slow, fast])  # list[slow_feat, fast_feat]
         # 对 slow 和 fast 做全局平均池化并拼接，作为整体特征
         pooled = []
         for f in feat:
             pooled.append(F.adaptive_avg_pool3d(f, 1).flatten(1))
         feat_vec = torch.cat(pooled, dim=1)  # (B, proj_in_features)
 
-        logits = self.model[-1](feat)  # 经过 pool + dropout + proj
+        logits = self.final_block(feat)  # 经过 pool + dropout + proj
         return {"logits": logits, "feat_list": [feat_vec]}
 
 
