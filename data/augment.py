@@ -103,6 +103,34 @@ def aug_to_ir(img: torch.Tensor) -> torch.Tensor:
     return torch.from_numpy(ir_3).permute(2, 0, 1).float() / 255.0
 
 
+def aug_random_crop_flip(video: torch.Tensor,
+                          scale_range=(0.8, 1.0),
+                          flip_prob=0.5) -> torch.Tensor:
+    """基础 spatial 增强: 随机裁剪 + 随机水平翻转
+    对整个视频 (T, 3, H, W) 用同一组参数, 保证时序一致.
+
+    动作识别标准 pipeline 必备, 之前缺失导致特征学习不充分.
+    """
+    T, C, H, W = video.shape
+    # 1. RandomResizedCrop (简化版: 随机选区域 + resize 回原尺寸)
+    s = random.uniform(*scale_range)
+    new_h, new_w = int(H * s), int(W * s)
+    new_h = max(new_h, 1)
+    new_w = max(new_w, 1)
+    top = random.randint(0, H - new_h) if H > new_h else 0
+    left = random.randint(0, W - new_w) if W > new_w else 0
+    cropped = video[:, :, top:top+new_h, left:left+new_w]
+    # resize 回 (H, W) - 整段视频同一参数
+    cropped = cropped.permute(1, 0, 2, 3)  # (C, T, h, w)
+    cropped = F.interpolate(cropped.unsqueeze(0), size=(H, W),
+                            mode='trilinear', align_corners=False)
+    cropped = cropped.squeeze(0).permute(1, 0, 2, 3)  # (T, C, H, W)
+    # 2. RandomHorizontalFlip
+    if random.random() < flip_prob:
+        cropped = torch.flip(cropped, dims=[-1])
+    return cropped
+
+
 class LongTailAugment:
     """长尾数据增强组合（在线）
 
@@ -118,6 +146,8 @@ class LongTailAugment:
         B = x.size(0)
         out = x.clone()
         for b in range(B):
+            # 基础 spatial 增强 (最先做, 后续增强基于裁剪后的画面)
+            out[b] = aug_random_crop_flip(out[b])
             # 红外合成（最高优先级，因为后续增强应基于红外或 RGB 一致处理）
             if random.random() < self.cfg.ir_synthesis_prob:
                 for t in range(out[b].size(0)):
