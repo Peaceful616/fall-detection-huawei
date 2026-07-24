@@ -100,9 +100,9 @@ def main():
                         if not chunk:
                             break
                         fp.write(chunk)
-                # 确保写盘
-                fp.flush()
-                os.fsync(fp.fileno())
+                    # 确保写盘（必须在 with 块内，文件未关闭时）
+                    fp.flush()
+                    os.fsync(fp.fileno())
                 tmp.rename(dst)
                 extracted += 1
                 if extracted % 1000 == 0:
