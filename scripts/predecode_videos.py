@@ -15,6 +15,8 @@
 import argparse
 import json
 import os
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -23,8 +25,9 @@ import numpy as np
 from tqdm import tqdm
 
 
-def predecode_video(video_path: str, output_dir: str, seq_len: int, input_size: int):
-    """将视频解码为帧图片，每个视频保存 seq_len 帧（均匀采样）"""
+def predecode_video_cv2(video_path: str, output_dir: str, seq_len: int,
+                         input_size: int):
+    """cv2 后端解码（适合 h264 等常规编码，不支持 AV1）"""
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         return False
@@ -34,17 +37,14 @@ def predecode_video(video_path: str, output_dir: str, seq_len: int, input_size: 
         cap.release()
         return False
 
-    # 均匀采样 seq_len 帧
     if total_frames >= seq_len:
         indices = np.linspace(0, total_frames - 1, seq_len, dtype=int)
     else:
-        # 不足时重复最后一帧
         indices = list(range(total_frames)) + [total_frames - 1] * (seq_len - total_frames)
 
-    os.makedirs(output_dir, exist_ok=True)
-
-    # 先写临时目录，完成后原子 rename，避免半成品
     tmp_dir = output_dir + ".tmp"
+    if os.path.isdir(tmp_dir):
+        shutil.rmtree(tmp_dir)
     os.makedirs(tmp_dir, exist_ok=True)
 
     ok = True
@@ -52,9 +52,7 @@ def predecode_video(video_path: str, output_dir: str, seq_len: int, input_size: 
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
         ret, frame = cap.read()
         if not ret:
-            # 读取失败，用上一帧或黑图
             if i > 0:
-                # 复用上一帧
                 prev_path = os.path.join(tmp_dir, f"frame_{i-1:04d}.jpg")
                 if os.path.exists(prev_path):
                     frame = cv2.imread(prev_path)
@@ -70,13 +68,101 @@ def predecode_video(video_path: str, output_dir: str, seq_len: int, input_size: 
 
     cap.release()
 
-    # 完成后原子 rename（删旧目录再移）
     if os.path.exists(output_dir):
-        # 已存在的可能是上次半成品，删掉
-        import shutil
         shutil.rmtree(output_dir)
     os.rename(tmp_dir, output_dir)
     return True
+
+
+def predecode_video_ffmpeg(video_path: str, output_dir: str, seq_len: int,
+                           input_size: int):
+    """ffmpeg 后端解码（支持 AV1 via libdav1d）
+
+    策略：用 ffprobe 拿总帧数，均匀采样 seq_len 个索引，
+    用 select 滤镜一次性抽帧，再 resize 到 input_size。
+    """
+    # 1. 用 ffprobe 拿总帧数
+    try:
+        probe = subprocess.run(
+            ["ffprobe", "-v", "error", "-count_frames",
+             "-select_streams", "v:0",
+             "-show_entries", "stream=nb_read_frames",
+             "-of", "csv=p=0", video_path],
+            capture_output=True, text=True, timeout=60,
+        )
+        total_frames = int(probe.stdout.strip())
+    except Exception:
+        total_frames = 0
+    if total_frames <= 0:
+        # 回退：用 cv2 拿不到 AV1 的，直接给个默认（81 帧）
+        total_frames = 81
+
+    # 均匀采样 seq_len 帧
+    if total_frames >= seq_len:
+        indices = np.linspace(0, total_frames - 1, seq_len, dtype=int)
+    else:
+        indices = list(range(total_frames)) + [total_frames - 1] * (seq_len - total_frames)
+
+    tmp_dir = output_dir + ".tmp"
+    if os.path.isdir(tmp_dir):
+        shutil.rmtree(tmp_dir)
+    os.makedirs(tmp_dir, exist_ok=True)
+
+    # 2. 用 select 滤镜抽帧：select='eq(n,i1)+eq(n,i2)+...'
+    # 输出为 image2 序列，文件名 frame_%04d.jpg
+    select_expr = "+".join(f"eq(n\\,{idx})" for idx in indices)
+    out_pattern = os.path.join(tmp_dir, "frame_%04d.jpg")
+    cmd = [
+        "ffmpeg", "-y", "-loglevel", "error",
+        "-i", video_path,
+        "-vf", f"select='{select_expr}',scale={input_size}:{input_size}",
+        "-vsync", "0",
+        "-frames:v", str(seq_len),
+        "-q:v", "2",
+        out_pattern,
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        if result.returncode != 0:
+            return False
+    except subprocess.TimeoutExpired:
+        return False
+
+    # 3. ffmpeg 输出 frame_0001.jpg ... frame_0016.jpg（1-indexed）
+    # 需要 rename 成 0-indexed frame_0000.jpg ... frame_0015.jpg
+    # 同时检查帧数，不足时复制最后一帧
+    tmp_files = sorted(Path(tmp_dir).glob("frame_*.jpg"))
+    if len(tmp_files) == 0:
+        return False
+
+    # rename 成 0-indexed
+    new_files = []
+    for i, f in enumerate(tmp_files):
+        new_path = os.path.join(tmp_dir, f"frame_{i:04d}.jpg")
+        if f.name != f"frame_{i:04d}.jpg":
+            f.rename(new_path)
+        new_files.append(new_path)
+
+    # 不足 seq_len 时复制最后一帧补齐
+    if len(new_files) < seq_len:
+        last = new_files[-1]
+        for i in range(len(new_files), seq_len):
+            dst = os.path.join(tmp_dir, f"frame_{i:04d}.jpg")
+            shutil.copy2(last, dst)
+
+    # 4. 原子 rename
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+    os.rename(tmp_dir, output_dir)
+    return True
+
+
+def predecode_video(video_path: str, output_dir: str, seq_len: int,
+                    input_size: int, backend: str = "ffmpeg"):
+    """统一入口，按后端分发"""
+    if backend == "ffmpeg":
+        return predecode_video_ffmpeg(video_path, output_dir, seq_len, input_size)
+    return predecode_video_cv2(video_path, output_dir, seq_len, input_size)
 
 
 def collect_kaggle_videos(videos_dir: str):
@@ -142,9 +228,13 @@ def main():
     parser.add_argument("--data_root", type=str, default="./data/kaggle_fall")
     parser.add_argument("--mode", choices=["kaggle", "omnifall"], default="kaggle",
                         help="kaggle=扫 videos/ 目录；omnifall=读 annotations/ 的 path")
+    parser.add_argument("--backend", choices=["ffmpeg", "cv2"], default="ffmpeg",
+                        help="解码后端：ffmpeg=支持 AV1/H264（libdav1d）；cv2=仅 h264")
     parser.add_argument("--seq_len", type=int, default=16)
     parser.add_argument("--input_size", type=int, default=224)
     parser.add_argument("--num_workers", type=int, default=4, help="并行解码进程数（暂未用，单进程）")
+    parser.add_argument("--force", action="store_true",
+                        help="强制重解码（忽略已有 frames，用于修复黑图）")
     args = parser.parse_args()
 
     videos_dir = os.path.join(args.data_root, "videos")
@@ -157,7 +247,7 @@ def main():
     else:
         video_list = collect_kaggle_videos(videos_dir)
 
-    print(f"[Predecode] mode={args.mode}")
+    print(f"[Predecode] mode={args.mode} backend={args.backend}")
     print(f"[Predecode] Found {len(video_list)} videos in {videos_dir}")
     print(f"[Predecode] Output: {frames_dir}")
     print(f"[Predecode] seq_len={args.seq_len}, input_size={args.input_size}")
@@ -168,26 +258,27 @@ def main():
     failed = 0
     for video_path, stem in tqdm(video_list, desc="Decoding"):
         output_dir = os.path.join(frames_dir, stem)
-        # 跳过已完整解码的（帧数 >= seq_len）
-        if os.path.isdir(output_dir) and len(os.listdir(output_dir)) >= args.seq_len:
+        # 跳过已完整解码的（帧数 >= seq_len 且非 force）
+        if not args.force and os.path.isdir(output_dir) \
+                and len(os.listdir(output_dir)) >= args.seq_len:
             skipped += 1
             continue
-        # 清理半成品临时目录
+        # 清理半成品临时目录 + 旧的黑图目录
         tmp_dir = output_dir + ".tmp"
         if os.path.isdir(tmp_dir):
-            import shutil
             shutil.rmtree(tmp_dir)
+        if args.force and os.path.isdir(output_dir):
+            shutil.rmtree(output_dir)
         try:
-            if predecode_video(video_path, output_dir, args.seq_len, args.input_size):
+            if predecode_video(video_path, output_dir, args.seq_len,
+                               args.input_size, backend=args.backend):
                 success += 1
             else:
                 failed += 1
         except Exception as e:
             print(f"\n[WARN] {stem}: {e}")
             failed += 1
-            # 清理半成品
             if os.path.isdir(tmp_dir):
-                import shutil
                 shutil.rmtree(tmp_dir)
 
     total = len(video_list)
