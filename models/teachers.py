@@ -41,13 +41,16 @@ class SlowFastTeacher(nn.Module):
     def forward(self, x):
         # x: (B, T, 3, H, W) → (B, 3, T, H, W)
         x = x.permute(0, 2, 1, 3, 4).contiguous()  # (B, 3, 16, H, W)
-        # 预解码 16 帧, SlowFast R50 默认 alpha=4 (fast:slow = 4:1).
-        # 不做时序插值(插值只是复制帧, 破坏双流设计), 直接用真实帧:
-        #   fast = 16 帧 (原始帧率)
-        #   slow = 16/4 = 4 帧 (每隔 4 帧取一帧: 0,4,8,12)
-        # 这是 SlowFast 论文的 4x16 配置, 比 8x8 弱但双流结构完整.
-        slow = x[:, :, ::4, :, :]   # (B, 3, 4, H, W)
-        fast = x                    # (B, 3, 16, H, W)
+        # 预解码只保存 16 帧, 但 slowfast_r50 的 head pool kernel=(16,7,7)
+        # 要求 slow pathway T>=16 (经 backbone 下采样后). 不插值会让 T=4 崩溃.
+        # 用三线性插值把 16->32 (帧复制), slow=x[::4]=8 帧, fast=32 帧.
+        # 不完美 (fast 有重复帧), 但能跑且保留双流结构. 真正修复需要预解码 32+ 帧.
+        x = F.interpolate(x, size=(32, x.size(-2), x.size(-1)),
+                          mode='trilinear', align_corners=False)
+        # Slow pathway: 每隔 4 帧取一帧 -> T=8
+        slow = x[:, :, ::4, :, :]
+        # Fast pathway: 原始帧率 -> T=32
+        fast = x
 
         # 前向传播到 body blocks（去掉最后的 pool/proj）
         # pytorchvideo Net.forward 即逐块前向，输入 list 会沿 block 链流转，
