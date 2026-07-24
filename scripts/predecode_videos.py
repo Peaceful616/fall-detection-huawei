@@ -223,6 +223,30 @@ def collect_omnifall_videos(data_root: str, videos_dir: str, splits=None):
     return out
 
 
+def _decode_one(task):
+    """worker 函数：解码单个视频。返回 (stem, status) status in {ok, skip, fail}"""
+    video_path, stem, frames_dir, seq_len, input_size, backend, force = task
+    output_dir = os.path.join(frames_dir, stem)
+    if not force and os.path.isdir(output_dir) \
+            and len(os.listdir(output_dir)) >= seq_len:
+        return (stem, "skip")
+    tmp_dir = output_dir + ".tmp"
+    if os.path.isdir(tmp_dir):
+        shutil.rmtree(tmp_dir)
+    if force and os.path.isdir(output_dir):
+        shutil.rmtree(output_dir)
+    try:
+        if predecode_video(video_path, output_dir, seq_len,
+                           input_size, backend=backend):
+            return (stem, "ok")
+        return (stem, "fail")
+    except Exception as e:
+        print(f"[WARN] {stem}: {e}", flush=True)
+        if os.path.isdir(tmp_dir):
+            shutil.rmtree(tmp_dir)
+        return (stem, "fail")
+
+
 def main():
     parser = argparse.ArgumentParser(description="预解码视频为图片帧")
     parser.add_argument("--data_root", type=str, default="./data/kaggle_fall")
@@ -232,7 +256,8 @@ def main():
                         help="解码后端：ffmpeg=支持 AV1/H264（libdav1d）；cv2=仅 h264")
     parser.add_argument("--seq_len", type=int, default=16)
     parser.add_argument("--input_size", type=int, default=224)
-    parser.add_argument("--num_workers", type=int, default=4, help="并行解码进程数（暂未用，单进程）")
+    parser.add_argument("--num_workers", type=int, default=8,
+                        help="并行解码进程数（默认 8，ffmpeg 软解 AV1 用多进程加速）")
     parser.add_argument("--force", action="store_true",
                         help="强制重解码（忽略已有 frames，用于修复黑图）")
     args = parser.parse_args()
@@ -241,45 +266,31 @@ def main():
     frames_dir = os.path.join(args.data_root, "frames")
     os.makedirs(frames_dir, exist_ok=True)
 
-    # 收集视频列表
     if args.mode == "omnifall":
         video_list = collect_omnifall_videos(args.data_root, videos_dir)
     else:
         video_list = collect_kaggle_videos(videos_dir)
 
-    print(f"[Predecode] mode={args.mode} backend={args.backend}")
+    print(f"[Predecode] mode={args.mode} backend={args.backend} workers={args.num_workers}")
     print(f"[Predecode] Found {len(video_list)} videos in {videos_dir}")
     print(f"[Predecode] Output: {frames_dir}")
     print(f"[Predecode] seq_len={args.seq_len}, input_size={args.input_size}")
 
-    # 逐个解码（断点续传：跳过已完整解码的）
-    success = 0
-    skipped = 0
-    failed = 0
-    for video_path, stem in tqdm(video_list, desc="Decoding"):
-        output_dir = os.path.join(frames_dir, stem)
-        # 跳过已完整解码的（帧数 >= seq_len 且非 force）
-        if not args.force and os.path.isdir(output_dir) \
-                and len(os.listdir(output_dir)) >= args.seq_len:
-            skipped += 1
-            continue
-        # 清理半成品临时目录 + 旧的黑图目录
-        tmp_dir = output_dir + ".tmp"
-        if os.path.isdir(tmp_dir):
-            shutil.rmtree(tmp_dir)
-        if args.force and os.path.isdir(output_dir):
-            shutil.rmtree(output_dir)
-        try:
-            if predecode_video(video_path, output_dir, args.seq_len,
-                               args.input_size, backend=args.backend):
+    tasks = [(vp, stem, frames_dir, args.seq_len, args.input_size,
+              args.backend, args.force)
+             for vp, stem in video_list]
+
+    from multiprocessing import Pool
+    success = skipped = failed = 0
+    with Pool(processes=args.num_workers) as pool:
+        for stem, status in tqdm(pool.imap_unordered(_decode_one, tasks),
+                                  total=len(tasks), desc="Decoding"):
+            if status == "ok":
                 success += 1
+            elif status == "skip":
+                skipped += 1
             else:
                 failed += 1
-        except Exception as e:
-            print(f"\n[WARN] {stem}: {e}")
-            failed += 1
-            if os.path.isdir(tmp_dir):
-                shutil.rmtree(tmp_dir)
 
     total = len(video_list)
     print(f"\n[Predecode] Done:")
