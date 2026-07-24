@@ -34,11 +34,7 @@ def train_one_epoch(model, loader, optimizer, criterion, device, teacher_name=""
         # AMP 混合精度
         with autocast():
             out = model(x)
-            if "modal_logits" in out:
-                # MViT: 主任务 + 模态对抗
-                loss = criterion(out["logits"], y)
-            else:
-                loss = criterion(out["logits"], y)
+            loss = criterion(out["logits"], y)
         if scaler is not None:
             scaler.scale(loss).backward()
             scaler.step(optimizer)
@@ -84,6 +80,14 @@ def main():
     parser.add_argument("--save_dir", default=os.path.join(ROOT, "checkpoints"))
     parser.add_argument("--resume", action="store_true",
                         help="从 teacher_<name>_last.pt 恢复训练")
+    parser.add_argument("--resume_from", choices=["last", "best"], default="last",
+                        help="恢复源: last=完整训练状态(含optimizer/scheduler), "
+                             "best=从best_ckpt权重重启(不恢复optimizer/scheduler, 用于改loss后重训)")
+    parser.add_argument("--class_weights", type=str, default=None,
+                        help="5类权重, 逗号分隔, 如 '1.0,1.2,1.8,1.5,3.0' "
+                             "(ADL,Fall,Fall-like,Lying,Transition). 默认无加权")
+    parser.add_argument("--label_smoothing", type=float, default=0.0,
+                        help="CrossEntropy label smoothing, 0=关闭, 建议0.1")
     parser.add_argument("--ckpt_every", type=int, default=5,
                         help="每 N 个 epoch 存一次 last checkpoint")
     args = parser.parse_args()
@@ -105,23 +109,44 @@ def main():
 
     optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=cfg.weight_decay)
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs)
-    criterion = nn.CrossEntropyLoss()
+
+    # loss: 可选 class weight + label smoothing
+    if args.class_weights:
+        w = torch.tensor([float(v) for v in args.class_weights.split(",")],
+                         device=device)
+        assert w.numel() == cfg.num_classes, \
+            f"class_weights 长度 {w.numel()} != num_classes {cfg.num_classes}"
+        criterion = nn.CrossEntropyLoss(weight=w, label_smoothing=args.label_smoothing)
+        print(f"[Loss] weighted CE, weight={w.tolist()}, smoothing={args.label_smoothing}")
+    else:
+        criterion = nn.CrossEntropyLoss(label_smoothing=args.label_smoothing)
+        if args.label_smoothing > 0:
+            print(f"[Loss] CE with label_smoothing={args.label_smoothing}")
 
     # 断点续传
     last_ckpt = os.path.join(args.save_dir, f"teacher_{args.teacher}_last.pt")
+    best_ckpt = os.path.join(args.save_dir, f"teacher_{args.teacher}_best.pt")
     start_epoch = 0
     best_f1 = 0
-    if args.resume and os.path.exists(last_ckpt):
-        print(f"[Resume] Loading {last_ckpt} ...")
-        ckpt = torch.load(last_ckpt, map_location=device)
-        model.load_state_dict(ckpt["state_dict"])
-        if "optimizer" in ckpt:
-            optimizer.load_state_dict(ckpt["optimizer"])
-        if "scheduler" in ckpt:
-            scheduler.load_state_dict(ckpt["scheduler"])
-        start_epoch = ckpt.get("epoch", -1) + 1
-        best_f1 = ckpt.get("best_f1", ckpt.get("f1", 0))
-        print(f"[Resume] from epoch {start_epoch}, best_f1={best_f1:.4f}")
+    if args.resume:
+        resume_path = best_ckpt if args.resume_from == "best" else last_ckpt
+        if not os.path.exists(resume_path):
+            print(f"[Resume] {resume_path} 不存在, 从头开始")
+        else:
+            print(f"[Resume] Loading {resume_path} (source={args.resume_from}) ...")
+            ckpt = torch.load(resume_path, map_location=device)
+            model.load_state_dict(ckpt["state_dict"])
+            # best 重启: 不恢复 optimizer/scheduler, 因为 loss 变了,
+            # 旧 optimizer 动量会对新 loss landscape 失配
+            if args.resume_from == "last":
+                if "optimizer" in ckpt:
+                    optimizer.load_state_dict(ckpt["optimizer"])
+                if "scheduler" in ckpt:
+                    scheduler.load_state_dict(ckpt["scheduler"])
+                start_epoch = ckpt.get("epoch", -1) + 1
+            # best_f1 始终继承, 避免后续覆盖已有 best
+            best_f1 = ckpt.get("best_f1", ckpt.get("f1", 0))
+            print(f"[Resume] best_f1={best_f1:.4f}")
 
     for epoch in range(start_epoch, args.epochs):
         print(f"Epoch {epoch+1}/{args.epochs}")
