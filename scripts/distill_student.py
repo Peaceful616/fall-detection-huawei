@@ -20,7 +20,8 @@ from models.student import build_student
 from models.teachers import build_teacher
 from data.dataset import build_datasets
 from utils.distill import DistillLoss
-from utils.metrics import accuracy, compute_fall_detection_metrics, print_metrics
+from utils.metrics import accuracy, compute_fall_detection_metrics, \
+    compute_multiclass_metrics, print_metrics
 
 
 def load_teacher_ckpt(name: str, model: nn.Module, ckpt_dir: str) -> bool:
@@ -89,8 +90,14 @@ def evaluate(student, loader, device):
         pred = out["logits"].argmax(dim=1).cpu()
         preds.extend(pred.tolist())
         targets.extend(y.tolist())
-    metrics = compute_fall_detection_metrics(preds, targets)
+    # 多分类（5 类 macro-F1 + 混淆矩阵），同时保留二分类 fall vs non-fall 对比
+    metrics = compute_multiclass_metrics(preds, targets, num_classes=cfg.num_classes)
+    binary = compute_fall_detection_metrics(preds, targets)
+    metrics["binary_fall"] = binary
     print_metrics(metrics, "Student Validation")
+    print(f"  [Binary fall vs non-fall] P={binary['precision']:.4f} "
+          f"R={binary['recall']:.4f} F1={binary['f1']:.4f} "
+          f"TP={binary['tp']} FP={binary['fp']} FN={binary['fn']}")
     return metrics
 
 
@@ -103,6 +110,10 @@ def main():
     parser.add_argument("--save_dir", default=os.path.join(ROOT, "checkpoints"))
     parser.add_argument("--teachers", nargs="+",
                        default=["slowfast", "video_swin", "mvit"])
+    parser.add_argument("--resume", action="store_true",
+                        help="从 student_last.pt 恢复训练（epoch/optimizer/scheduler）")
+    parser.add_argument("--ckpt_every", type=int, default=5,
+                        help="每 N 个 epoch 存一次 student_last.pt（断点续传用）")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -141,11 +152,39 @@ def main():
     )
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs)
 
+    # 断点续传：从 student_last.pt 恢复
+    last_ckpt = os.path.join(args.save_dir, "student_last.pt")
+    start_epoch = 0
     best_f1 = 0
-    for epoch in range(args.epochs):
+    if args.resume and os.path.exists(last_ckpt):
+        print(f"[Resume] Loading {last_ckpt} ...")
+        ckpt = torch.load(last_ckpt, map_location=device)
+        student.load_state_dict(ckpt["state_dict"])
+        if "optimizer" in ckpt:
+            optimizer.load_state_dict(ckpt["optimizer"])
+        if "scheduler" in ckpt:
+            scheduler.load_state_dict(ckpt["scheduler"])
+        start_epoch = ckpt.get("epoch", -1) + 1
+        best_f1 = ckpt.get("best_f1", ckpt.get("f1", 0))
+        print(f"[Resume] from epoch {start_epoch}, best_f1={best_f1:.4f}")
+
+    for epoch in range(start_epoch, args.epochs):
         print(f"Epoch {epoch+1}/{args.epochs}")
         train_one_epoch(student, teachers, train_loader, optimizer, distill_loss, device, epoch)
         scheduler.step()
+
+        # 每 ckpt_every 个 epoch 存一次 last（断点续传用）
+        if (epoch + 1) % args.ckpt_every == 0:
+            torch.save({
+                "epoch": epoch,
+                "state_dict": student.state_dict(),
+                "optimizer": optimizer.state_dict(),
+                "scheduler": scheduler.state_dict(),
+                "best_f1": best_f1,
+                "config": cfg.__dict__,
+            }, last_ckpt)
+            print(f"  Checkpoint: {last_ckpt} (epoch {epoch+1})")
+
         if (epoch + 1) % 5 == 0 or epoch == args.epochs - 1:
             metrics = evaluate(student, val_loader, device)
             if metrics["f1"] > best_f1:
