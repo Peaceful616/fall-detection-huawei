@@ -20,7 +20,8 @@ from torch.cuda.amp import autocast, GradScaler
 from configs.default import cfg
 from models.teachers import build_teacher
 from data.dataset import build_datasets
-from utils.metrics import accuracy, compute_fall_detection_metrics, print_metrics
+from utils.metrics import accuracy, compute_fall_detection_metrics, \
+    compute_multiclass_metrics, print_metrics
 
 
 def train_one_epoch(model, loader, optimizer, criterion, device, teacher_name="", scaler=None):
@@ -53,9 +54,9 @@ def train_one_epoch(model, loader, optimizer, criterion, device, teacher_name=""
 
 
 @torch.no_grad()
-def evaluate(model, loader, device):
+def evaluate(model, loader, device, num_classes: int = 5):
     model.eval()
-    preds, targets, scenes = [], [], []
+    preds, targets = [], []
     for batch in loader:
         x = batch["video"].to(device)
         y = batch["label"]
@@ -63,10 +64,14 @@ def evaluate(model, loader, device):
         pred = out["logits"].argmax(dim=1).cpu()
         preds.extend(pred.tolist())
         targets.extend(y.tolist())
-        scenes.extend(batch["scene"])
-    metrics = compute_fall_detection_metrics(preds, targets)
-    scene_metrics = {}  # 简化
+    # 5 类 macro-F1（用于 best 判断）+ 二分类 fall vs non-fall（对比用）
+    metrics = compute_multiclass_metrics(preds, targets, num_classes=num_classes)
+    binary = compute_fall_detection_metrics(preds, targets)
+    metrics["binary_fall"] = binary
     print_metrics(metrics, "Validation")
+    print(f"  [Binary fall vs non-fall] P={binary['precision']:.4f} "
+          f"R={binary['recall']:.4f} F1={binary['f1']:.4f} "
+          f"TP={binary['tp']} FP={binary['fp']} FN={binary['fn']}")
     return metrics
 
 
@@ -77,6 +82,10 @@ def main():
     parser.add_argument("--batch_size", type=int, default=cfg.batch_size)
     parser.add_argument("--lr", type=float, default=cfg.lr)
     parser.add_argument("--save_dir", default=os.path.join(ROOT, "checkpoints"))
+    parser.add_argument("--resume", action="store_true",
+                        help="从 teacher_<name>_last.pt 恢复训练")
+    parser.add_argument("--ckpt_every", type=int, default=5,
+                        help="每 N 个 epoch 存一次 last checkpoint")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -98,13 +107,40 @@ def main():
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs)
     criterion = nn.CrossEntropyLoss()
 
+    # 断点续传
+    last_ckpt = os.path.join(args.save_dir, f"teacher_{args.teacher}_last.pt")
+    start_epoch = 0
     best_f1 = 0
-    for epoch in range(args.epochs):
+    if args.resume and os.path.exists(last_ckpt):
+        print(f"[Resume] Loading {last_ckpt} ...")
+        ckpt = torch.load(last_ckpt, map_location=device)
+        model.load_state_dict(ckpt["state_dict"])
+        if "optimizer" in ckpt:
+            optimizer.load_state_dict(ckpt["optimizer"])
+        if "scheduler" in ckpt:
+            scheduler.load_state_dict(ckpt["scheduler"])
+        start_epoch = ckpt.get("epoch", -1) + 1
+        best_f1 = ckpt.get("best_f1", ckpt.get("f1", 0))
+        print(f"[Resume] from epoch {start_epoch}, best_f1={best_f1:.4f}")
+
+    for epoch in range(start_epoch, args.epochs):
         print(f"Epoch {epoch+1}/{args.epochs}")
         train_one_epoch(model, train_loader, optimizer, criterion, device, args.teacher)
         scheduler.step()
-        if (epoch + 1) % 5 == 0:
-            metrics = evaluate(model, val_loader, device)
+
+        # 每 ckpt_every 个 epoch 存 last
+        if (epoch + 1) % args.ckpt_every == 0:
+            torch.save({
+                "epoch": epoch,
+                "state_dict": model.state_dict(),
+                "optimizer": optimizer.state_dict(),
+                "scheduler": scheduler.state_dict(),
+                "best_f1": best_f1,
+            }, last_ckpt)
+            print(f"  Checkpoint: {last_ckpt} (epoch {epoch+1})")
+
+        if (epoch + 1) % 5 == 0 or epoch == args.epochs - 1:
+            metrics = evaluate(model, val_loader, device, num_classes=cfg.num_classes)
             if metrics["f1"] > best_f1:
                 best_f1 = metrics["f1"]
                 ckpt_path = os.path.join(args.save_dir, f"teacher_{args.teacher}_best.pt")
@@ -113,7 +149,7 @@ def main():
                     "state_dict": model.state_dict(),
                     "f1": best_f1,
                 }, ckpt_path)
-                print(f"  Saved: {ckpt_path} (F1={best_f1:.4f})")
+                print(f"  Saved: {ckpt_path} (macro_f1={best_f1:.4f})")
 
 
 if __name__ == "__main__":
