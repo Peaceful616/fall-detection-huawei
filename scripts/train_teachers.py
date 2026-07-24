@@ -166,7 +166,25 @@ def main():
     model = build_teacher(args.teacher, num_classes=cfg.num_classes).to(device)
     print(f"[Teacher: {args.teacher}] params={sum(p.numel() for p in model.parameters())/1e6:.2f}M")
 
-    optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=cfg.weight_decay)
+    # param groups: backbone (预训练, 小 lr) vs 新分类头 (大 lr)
+    # 之前所有参数同一 lr, 预训练特征被过快破坏.
+    backbone_params, head_params = [], []
+    for name, p in model.named_parameters():
+        if not p.requires_grad:
+            continue
+        # 分类头关键词: proj (SlowFast) / head (VideoSwin/MViT) / head.1 (MViT Sequential)
+        if any(k in name for k in ["blocks[-1].proj", "model.head", ".head"]):
+            head_params.append(p)
+        else:
+            backbone_params.append(p)
+    head_lr = args.lr
+    backbone_lr = args.lr * 0.1  # backbone 用 1/10 lr, 保护预训练特征
+    optimizer = AdamW([
+        {"params": backbone_params, "lr": backbone_lr},
+        {"params": head_params, "lr": head_lr},
+    ], lr=args.lr, weight_decay=cfg.weight_decay)
+    print(f"[Optimizer] backbone: {len(backbone_params)} params lr={backbone_lr:.1e}, "
+          f"head: {len(head_params)} params lr={head_lr:.1e}")
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs)
 
     # loss: CE / weighted CE / Focal Loss 三选一
