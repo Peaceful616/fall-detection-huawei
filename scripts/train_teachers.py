@@ -136,10 +136,23 @@ def main():
                              "可与 class_weights 同用(alpha 语义), 但建议更温和或不用.")
     parser.add_argument("--ckpt_every", type=int, default=5,
                         help="每 N 个 epoch 存一次 last checkpoint")
+    parser.add_argument("--amp", action="store_true", default=True,
+                        help="启用 AMP 混合精度 (默认开). 加 --no-amp 关闭, "
+                             "某些模型在 fp16 下可能数值不稳.")
+    parser.add_argument("--no-amp", dest="amp", action="store_false",
+                        help="关闭 AMP 混合精度")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     os.makedirs(args.save_dir, exist_ok=True)
+
+    # AMP: GradScaler 必须和 autocast 配套, 否则只有 forward 是 fp16 而 backward
+    # 没有梯度缩放, 小梯度会下溢成 0, 模型学不到细粒度特征.
+    scaler = GradScaler() if (args.amp and device.type == "cuda") else None
+    if scaler is not None:
+        print(f"[AMP] enabled (GradScaler + autocast)")
+    else:
+        print(f"[AMP] disabled")
 
     # 数据
     train_set, val_set = build_datasets(cfg)
@@ -209,7 +222,8 @@ def main():
 
     for epoch in range(start_epoch, args.epochs):
         print(f"Epoch {epoch+1}/{args.epochs}")
-        train_one_epoch(model, train_loader, optimizer, criterion, device, args.teacher)
+        train_one_epoch(model, train_loader, optimizer, criterion, device,
+                        args.teacher, scaler=scaler)
         scheduler.step()
 
         # 每 ckpt_every 个 epoch 存 last
