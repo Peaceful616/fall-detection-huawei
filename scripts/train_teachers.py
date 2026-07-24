@@ -24,6 +24,48 @@ from utils.metrics import accuracy, compute_fall_detection_metrics, \
     compute_multiclass_metrics, print_metrics
 
 
+class FocalLoss(nn.Module):
+    """Focal Loss (Lin et al. 2017): -alpha_t * (1-p_t)^gamma * log(p_t)
+
+    自适应难样本: 对预测概率低的样本(无论属于哪类)放大梯度,
+    对预测概率高的样本(易分)降权. 天然处理长尾 + 类间混淆.
+
+    gamma=0 退化为 weighted CE.
+    gamma=2 是原论文默认, 适合长尾+混淆.
+
+    可选 alpha (类权重): 和 weighted CE 一样的语义, 但 Focal 自带难样本降权,
+    alpha 可以更温和甚至不用. 默认 None.
+    """
+
+    def __init__(self, gamma: float = 2.0, alpha=None, label_smoothing: float = 0.0):
+        super().__init__()
+        self.gamma = gamma
+        self.alpha = alpha  # tensor[C] or None
+        self.label_smoothing = label_smoothing
+
+    def forward(self, logits, target):
+        # log_prob: [N, C]
+        log_prob = torch.log_softmax(logits, dim=1)
+        prob = log_prob.exp()
+        # smooth target
+        if self.label_smoothing > 0:
+            n_class = logits.size(1)
+            with torch.no_grad():
+                true_dist = torch.full_like(prob, self.label_smoothing / (n_class - 1))
+                true_dist.scatter_(1, target.unsqueeze(1), 1 - self.label_smoothing)
+            ce = -(true_dist * log_prob).sum(dim=1)
+        else:
+            ce = torch.nn.functional.nll_loss(log_prob, target, reduction="none")
+        p_t = prob.gather(1, target.unsqueeze(1)).squeeze(1).clamp(min=1e-6, max=1.0)
+        focal = (1 - p_t) ** self.gamma
+        if self.alpha is not None:
+            a_t = self.alpha.gather(0, target)
+            loss = a_t * focal * ce
+        else:
+            loss = focal * ce
+        return loss.mean()
+
+
 def train_one_epoch(model, loader, optimizer, criterion, device, teacher_name="", scaler=None):
     model.train()
     total_loss, total_acc, n = 0, 0, 0
@@ -88,6 +130,10 @@ def main():
                              "(ADL,Fall,Fall-like,Lying,Transition). 默认无加权")
     parser.add_argument("--label_smoothing", type=float, default=0.0,
                         help="CrossEntropy label smoothing, 0=关闭, 建议0.1")
+    parser.add_argument("--focal_gamma", type=float, default=0.0,
+                        help="Focal Loss gamma, 0=关闭用CE, 2.0=原论文默认. "
+                             ">0 时启用 Focal Loss 替代 weighted CE, 自适应难样本降权. "
+                             "可与 class_weights 同用(alpha 语义), 但建议更温和或不用.")
     parser.add_argument("--ckpt_every", type=int, default=5,
                         help="每 N 个 epoch 存一次 last checkpoint")
     args = parser.parse_args()
@@ -110,12 +156,25 @@ def main():
     optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=cfg.weight_decay)
     scheduler = CosineAnnealingLR(optimizer, T_max=args.epochs)
 
-    # loss: 可选 class weight + label smoothing
+    # loss: CE / weighted CE / Focal Loss 三选一
+    # 构造 class weight tensor (CE 和 Focal 共用)
+    w = None
     if args.class_weights:
         w = torch.tensor([float(v) for v in args.class_weights.split(",")],
                          device=device)
         assert w.numel() == cfg.num_classes, \
             f"class_weights 长度 {w.numel()} != num_classes {cfg.num_classes}"
+
+    if args.focal_gamma > 0:
+        criterion = FocalLoss(gamma=args.focal_gamma, alpha=w,
+                              label_smoothing=args.label_smoothing)
+        tag = f"Focal(gamma={args.focal_gamma}"
+        if w is not None:
+            tag += f", alpha={w.tolist()}"
+        if args.label_smoothing > 0:
+            tag += f", smoothing={args.label_smoothing}"
+        print(f"[Loss] {tag})")
+    elif w is not None:
         criterion = nn.CrossEntropyLoss(weight=w, label_smoothing=args.label_smoothing)
         print(f"[Loss] weighted CE, weight={w.tolist()}, smoothing={args.label_smoothing}")
     else:
