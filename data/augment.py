@@ -121,8 +121,9 @@ def aug_random_crop_flip(video: torch.Tensor,
     left = random.randint(0, W - new_w) if W > new_w else 0
     cropped = video[:, :, top:top+new_h, left:left+new_w]
     # resize 回 (H, W) - 整段视频同一参数
-    cropped = cropped.permute(1, 0, 2, 3)  # (C, T, h, w)
-    cropped = F.interpolate(cropped.unsqueeze(0), size=(H, W),
+    # (T, C, h, w) -> (1, C, T, h, w) -> interpolate size=(T, H, W)
+    cropped = cropped.permute(1, 0, 2, 3).unsqueeze(0)  # (1, C, T, h, w)
+    cropped = F.interpolate(cropped, size=(T, H, W),
                             mode='trilinear', align_corners=False)
     cropped = cropped.squeeze(0).permute(1, 0, 2, 3)  # (T, C, H, W)
     # 2. RandomHorizontalFlip
