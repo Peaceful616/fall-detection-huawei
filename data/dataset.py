@@ -64,21 +64,30 @@ def load_omnifall(data_root: str, split: str = "train") -> List[Dict]:
             annos = json.load(f)
         # 过滤掉 video_path 不存在的（OmniFall path 可能需 video=True 才下载）
         # 这里保留所有样本，让 Dataset 在 __getitem__ 时处理缺失
-        return [
-            {
+        # keypoint_csv: OmniFall 原生无 keypoint，由 scripts/extract_keypoints.py
+        # 用 YOLOv8s-pose 生成后存到 <data_root>/keypoints/<stem>.csv
+        # stem = video_path 的最后一段（与 predecode_videos.py 一致）
+        kp_dir = os.path.join(data_root, "keypoints")
+        out = []
+        for a in annos:
+            entry = {
                 "video_path": a["video_path"],
                 "label": int(a.get("label", 0)),
                 "start": float(a.get("start", 0.0)),
                 "end": float(a.get("end", -1.0)),
                 "scene": a.get("scene", "indoor"),
                 "light": a.get("light", "normal"),
-                # 额外字段供 IR 增强等使用
                 "source": a.get("source", ""),
                 "view": a.get("view", ""),
                 "is_ir": bool(a.get("is_ir", False)),
             }
-            for a in annos
-        ]
+            # 若 keypoints/<stem>.csv 存在，加入 keypoint_csv 字段（伪 keypoint）
+            stem = a["video_path"].split("/")[-1]
+            kp_csv = os.path.join(kp_dir, f"{stem}.csv")
+            if os.path.exists(kp_csv) and os.path.getsize(kp_csv) > 0:
+                entry["keypoint_csv"] = kp_csv
+            out.append(entry)
+        return out
 
     # 回退：旧的占位格式（annotations.json + videos/）
     anno_file = os.path.join(data_root, "annotations.json")
