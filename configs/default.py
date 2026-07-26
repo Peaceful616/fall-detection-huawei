@@ -70,7 +70,7 @@ class Config:
     warmup_epochs: int = 5
 
     # ============ 数据 ============
-    data_root: str = "./data/kaggle_fall"  # Kaggle Fall Video Dataset
+    data_root: str = "./data/omnifall_syn"  # OF-Syn 5 类（round 2 起固定）
     ir_synthesis_prob: float = 0.3
     num_workers: int = 8  # 12 vCPU 可支撑 8 workers
 
