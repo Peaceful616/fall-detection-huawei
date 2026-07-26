@@ -132,10 +132,9 @@ def main():
     train_set, val_set = build_datasets(cfg)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
                              num_workers=cfg.num_workers, pin_memory=True,
-                             prefetch_factor=2, persistent_workers=True)
+                             prefetch_factor=2)
     val_loader = DataLoader(val_set, batch_size=args.batch_size, shuffle=False,
-                           num_workers=cfg.num_workers, pin_memory=True,
-                           persistent_workers=True)
+                           num_workers=cfg.num_workers, pin_memory=True)
 
     # 学生
     student = build_student(cfg).to(device)
