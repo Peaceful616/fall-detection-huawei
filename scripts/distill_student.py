@@ -114,6 +114,15 @@ def main():
                         help="从 student_last.pt 恢复训练（epoch/optimizer/scheduler）")
     parser.add_argument("--ckpt_every", type=int, default=5,
                         help="每 N 个 epoch 存一次 student_last.pt（断点续传用）")
+    parser.add_argument("--class_weights", type=str, default=None,
+                        help="5类权重, 逗号分隔, 如 '1.0,1.2,1.8,1.5,3.0' "
+                             "(ADL,Fall,Fall-like,Lying,Transition). 默认无加权")
+    parser.add_argument("--label_smoothing", type=float, default=0.0,
+                        help="CE label smoothing, 0=关闭, 建议0.1")
+    parser.add_argument("--focal_gamma", type=float, default=0.0,
+                        help="Focal Loss gamma, 0=关闭用CE, 2.0=原论文默认. "
+                             ">0 时启用 Focal Loss 替代 weighted CE, 自适应难样本降权. "
+                             "可与 class_weights 同用(alpha 语义), 但建议更温和或不用.")
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -122,9 +131,11 @@ def main():
     # 数据
     train_set, val_set = build_datasets(cfg)
     train_loader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True,
-                             num_workers=cfg.num_workers)
+                             num_workers=cfg.num_workers, pin_memory=True,
+                             prefetch_factor=2, persistent_workers=True)
     val_loader = DataLoader(val_set, batch_size=args.batch_size, shuffle=False,
-                           num_workers=cfg.num_workers)
+                           num_workers=cfg.num_workers, pin_memory=True,
+                           persistent_workers=True)
 
     # 学生
     student = build_student(cfg).to(device)
@@ -143,8 +154,24 @@ def main():
         t.eval()
         teachers[name] = t
 
+    # 构造 class weight tensor (CE 和 Focal 共用)
+    w = None
+    if args.class_weights:
+        w = torch.tensor([float(v) for v in args.class_weights.split(",")],
+                         device=device)
+        assert w.numel() == cfg.num_classes, \
+            f"class_weights 长度 {w.numel()} != num_classes {cfg.num_classes}"
+
     # 蒸馏损失
-    distill_loss = DistillLoss(cfg).to(device)
+    distill_loss = DistillLoss(
+        cfg, class_weights=w, focal_gamma=args.focal_gamma,
+        label_smoothing=args.label_smoothing,
+    ).to(device)
+    print(f"[DistillLoss] ce_kind={distill_loss.ce_kind} "
+          f"weights={w.tolist() if w is not None else None} "
+          f"focal_gamma={args.focal_gamma} smoothing={args.label_smoothing}")
+    print(f"[DistillLoss] alphas: feat={cfg.alpha_feat} logit={cfg.alpha_logit} "
+          f"rkd={cfg.alpha_rkd} modal={cfg.alpha_modal} aux={cfg.alpha_aux}")
 
     optimizer = AdamW(
         filter(lambda p: p.requires_grad, student.parameters()),

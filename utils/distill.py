@@ -105,13 +105,61 @@ def modal_distill_loss(student_logits: torch.Tensor, teacher_modal_logits: torch
     ) * (temperature ** 2)
 
 
+class FocalLoss(nn.Module):
+    """Focal Loss: -alpha_t * (1-p_t)^gamma * log(p_t)
+
+    自适应难样本降权, 天然处理长尾 + 类间混淆. gamma=0 退化为 weighted CE.
+    """
+
+    def __init__(self, gamma: float = 2.0, alpha=None, label_smoothing: float = 0.0):
+        super().__init__()
+        self.gamma = gamma
+        self.alpha = alpha  # tensor[C] or None
+        self.label_smoothing = label_smoothing
+
+    def forward(self, logits, target):
+        log_prob = torch.log_softmax(logits, dim=1)
+        prob = log_prob.exp()
+        if self.label_smoothing > 0:
+            n_class = logits.size(1)
+            with torch.no_grad():
+                true_dist = torch.full_like(prob, self.label_smoothing / (n_class - 1))
+                true_dist.scatter_(1, target.unsqueeze(1), 1 - self.label_smoothing)
+            ce = -(true_dist * log_prob).sum(dim=1)
+        else:
+            ce = torch.nn.functional.nll_loss(log_prob, target, reduction="none")
+        p_t = prob.gather(1, target.unsqueeze(1)).squeeze(1).clamp(min=1e-6, max=1.0)
+        focal = (1 - p_t) ** self.gamma
+        if self.alpha is not None:
+            a_t = self.alpha.gather(0, target)
+            loss = a_t * focal * ce
+        else:
+            loss = focal * ce
+        return loss.mean()
+
+
 class DistillLoss(nn.Module):
     """总蒸馏损失"""
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, class_weights=None, focal_gamma=0.0,
+                 label_smoothing=0.0):
         super().__init__()
         self.cfg = cfg
-        self.ce = nn.CrossEntropyLoss()
+        # 主任务 CE / weighted CE / Focal Loss 三选一
+        if focal_gamma > 0:
+            self.ce = FocalLoss(
+                gamma=focal_gamma, alpha=class_weights,
+                label_smoothing=label_smoothing,
+            )
+            self.ce_kind = "focal"
+        elif class_weights is not None:
+            self.ce = nn.CrossEntropyLoss(
+                weight=class_weights, label_smoothing=label_smoothing,
+            )
+            self.ce_kind = "weighted_ce"
+        else:
+            self.ce = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
+            self.ce_kind = "ce"
         # 特征对齐：初始化为 None，forward 中根据实际维度动态创建
         self.feat_align_slowfast = None
         self.feat_align_video_swin = None

@@ -50,12 +50,12 @@ class Config:
     multi_level_feat_distill: bool = True  # P3+P4+P5 三层对齐
     alpha_feat_multilevel: float = 0.3
 
-    # ============ 蒸馏 ============
+    # ============ 蒸馏（round 2 调权：让 feat/rkd 真正参与，避免 logit/modal 主导）============
     distill_temperature: float = 8.0  # v2:6 → v3:8
-    alpha_feat: float = 0.5
-    alpha_logit: float = 1.0
-    alpha_rkd: float = 0.2
-    alpha_modal: float = 0.3
+    alpha_feat: float = 1.0          # v1:0.5 → v2:1.0（特征对齐加权）
+    alpha_logit: float = 0.5         # v1:1.0 → v2:0.5（logit KL 降权，不被教师 cap 锁死）
+    alpha_rkd: float = 0.5          # v1:0.2 → v2:0.5（关系蒸馏加权）
+    alpha_modal: float = 0.1        # v1:0.3 → v2:0.1（modal KL 降权，MViT modal_logits=zeros 退化）
     alpha_aux: float = 0.3
     teacher_weights: dict = field(default_factory=lambda: {
         "slowfast": 0.4, "video_swin": 0.4, "mvit": 0.2
